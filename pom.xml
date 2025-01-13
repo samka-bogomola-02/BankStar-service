@@ -12,7 +12,7 @@
 	<artifactId>fintech</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>fintech</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Star Bank Loan Recommendation Service</description>
 	<url/>
 	<licenses>
 		<license/>
