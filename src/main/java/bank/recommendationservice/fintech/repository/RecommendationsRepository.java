@@ -24,4 +24,15 @@ public class RecommendationsRepository {
                 user);
         return result != null ? result : 0;
     }
+    public boolean checkConnection() {
+        try {
+            jdbcTemplate.queryForObject("SELECT 1", Integer.class);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
 }

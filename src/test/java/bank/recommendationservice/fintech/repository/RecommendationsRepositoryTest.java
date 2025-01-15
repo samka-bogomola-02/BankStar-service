@@ -28,6 +28,12 @@ class RecommendationsRepositoryTest {
     }
 
     @Test
+    public void testCheckConnection() {
+        boolean isConnected = recommendationsRepository.checkConnection();
+        assertTrue(isConnected, "Подключение к базе данных должно быть успешным");
+    }
+
+    @Test
     public void testGetRandomTransactionAmount_ReturnsAmount() {
         UUID userId = UUID.randomUUID();
         int expectedAmount = 100;
@@ -55,6 +61,9 @@ class RecommendationsRepositoryTest {
         // Проверка результата
         assertEquals(0, actualAmount);
     }
-
-
+    @Test public void testGetRandomTransactionAmount() {
+        UUID testUser = UUID.randomUUID();
+        int amount = recommendationsRepository.getRandomTransactionAmount(testUser);
+        System.out.println("Transaction Amount: " + amount);
+    }
 }
