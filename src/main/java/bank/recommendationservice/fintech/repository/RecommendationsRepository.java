@@ -8,31 +8,21 @@ import java.util.UUID;
 
 @Repository
 public class RecommendationsRepository {
-    /**
-     * Это тестовый репозиторий, предназначенный для проверки работы JDBC,
-     * в нем содержится пример sql запроса для BD
-     * @author Bogomolova
-     */
     private final JdbcTemplate jdbcTemplate;
 
     public RecommendationsRepository(@Qualifier("recommendationsJdbcTemplate") JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int getRandomTransactionAmount(UUID user){
-        Integer result = jdbcTemplate.queryForObject(
-                "SELECT amount FROM transactions t WHERE t.user_id = ? LIMIT 1",
-                Integer.class,
-                user);
-        return result != null ? result : 0;
-    }
-    public boolean checkConnection() {
-        try {
-            jdbcTemplate.queryForObject("SELECT 1", Integer.class);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+    /**
+     * Проверка, есть ли у пользователя хотя бы одна транзакция с продуктом типа DEBIT
+     * Реализация с помощью SQL-запроса. JOIN-запрос к таблице transactions и таблице products.
+     * @param userId id пользователя
+     * @return {@code true} если есть; {@code false}, если нет
+     */
+    public boolean userHasAtLeastOneDebitProduct(UUID userId) {
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject("SELECT COUNT (*) FROM transactions t JOIN products p ON t.PRODUCT_ID = p.id WHERE t.USER_ID = ? AND p.TYPE = 'DEBIT'",
+                Boolean.class,
+                userId));
     }
 }
