@@ -1,5 +1,6 @@
 package bank.recommendationservice.fintech.repository;
 
+import bank.recommendationservice.fintech.configuration.testrepository.RecommendationsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -20,7 +21,7 @@ class RecommendationsRepositoryTest {
     private JdbcTemplate jdbcTemplate;
 
     @InjectMocks
-    private RecommendationsRepository_PreTest recommendationsRepository;
+    private RecommendationsRepository recommendationsRepository;
 
     @BeforeEach
     public void setUp() {

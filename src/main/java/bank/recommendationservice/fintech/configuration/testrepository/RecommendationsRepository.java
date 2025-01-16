@@ -1,4 +1,4 @@
-package bank.recommendationservice.fintech.repository;
+package bank.recommendationservice.fintech.configuration.testrepository;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public class RecommendationsRepository_PreTest {
+public class RecommendationsRepository {
     /**
      * Это тестовый репозиторий, предназначенный для проверки работы JDBC,
      * в нем содержится пример sql запроса для BD
@@ -15,7 +15,7 @@ public class RecommendationsRepository_PreTest {
      */
     private final JdbcTemplate jdbcTemplate;
 
-    public RecommendationsRepository_PreTest(@Qualifier("recommendationsJdbcTemplate") JdbcTemplate jdbcTemplate) {
+    public RecommendationsRepository(@Qualifier("recommendationsJdbcTemplate") JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
