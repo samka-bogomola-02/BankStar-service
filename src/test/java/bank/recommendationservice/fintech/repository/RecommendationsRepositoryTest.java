@@ -1,5 +1,6 @@
 package bank.recommendationservice.fintech.repository;
 
+import bank.recommendationservice.fintech.testrepository.RecommendationsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
