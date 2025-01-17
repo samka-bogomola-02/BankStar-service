@@ -1,4 +1,4 @@
-package bank.recommendationservice.fintech.testrepository;
+package bank.recommendationservice.fintech.repository;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
