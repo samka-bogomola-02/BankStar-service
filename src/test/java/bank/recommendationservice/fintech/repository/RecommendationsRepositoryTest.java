@@ -21,7 +21,7 @@ class RecommendationsRepositoryTest {
     private JdbcTemplate jdbcTemplate;
 
     @InjectMocks
-    private RecommendationsRepository recommendationsRepository;
+    private RecommendationsRepository_PreTest recommendationsRepository;
 
     @BeforeEach
     public void setUp() {
