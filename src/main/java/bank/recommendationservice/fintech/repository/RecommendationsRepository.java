@@ -25,4 +25,10 @@ public class RecommendationsRepository {
                 Boolean.class,
                 userId));
     }
+
+    public boolean userHasNoInvestProducts(UUID userId) {
+        return Boolean.FALSE.equals(jdbcTemplate.queryForObject("SELECT COUNT (*) FROM transactions t JOIN products p ON t.PRODUCT_ID = p.id WHERE t.USER_ID = ? AND p.TYPE = 'INVEST'",
+                Boolean.class,
+                userId));
+    }
 }
