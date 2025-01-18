@@ -15,14 +15,45 @@ public class RecommendationsRepository {
     }
 
     /**
-     * Проверка, есть ли у пользователя хотя бы одна транзакция с продуктом типа DEBIT
-     * Реализация с помощью SQL-запроса. JOIN-запрос к таблице transactions и таблице products.
-     * @param userId id пользователя
+     * Проверка, есть ли в базе данных хотя бы одна транзакция типа productType у пользователя с id userId
+     *
+     * @param userId      - ID пользователя
+     * @param productType - тип продукта
      * @return {@code true} если есть; {@code false}, если нет
      */
-    public boolean userHasAtLeastOneDebitProduct(UUID userId) {
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject("SELECT COUNT (*) FROM transactions t JOIN products p ON t.PRODUCT_ID = p.id WHERE t.USER_ID = ? AND p.TYPE = 'DEBIT'",
+    public boolean usesProductOfType(UUID userId, String productType) {
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject("SELECT COUNT(*) FROM transactions t JOIN products p ON t.PRODUCT_ID = p.ID WHERE t.USER_ID = ? AND p.TYPE = ?",
                 Boolean.class,
-                userId));
+                userId,
+                productType));
     }
+
+    /**
+     * Возвращает сумму всех пополнений (депозитов) по продукту типа productType у пользователя с id UserId
+     *
+     * @param userId      - id пользователя
+     * @param productType - тип продукта
+     * @return Integer со значением суммы всех пополнений
+     */
+    public Integer getDepositsOfTypeTotal(UUID userId, String productType) {
+        return jdbcTemplate.queryForObject("SELECT SUM (*) FROM transactions t JOIN products p ON t.PRODUCT_ID = p.id WHERE t.USER_ID = ? AND p.TYPE = ? AND t.TYPE = 'DEPOSIT'",
+                Integer.class,
+                userId,
+                productType);
+    }
+
+    /**
+     * Возвращает сумму всех трат (withdraw) по продукту типа productType у пользователя с id UserId
+     *
+     * @param userId      - id пользователя
+     * @param productType - тип продукта
+     * @return Integer со значением суммы всех трат
+     */
+    public Integer getWithdrawsOfTypeTotal(UUID userId, String productType) {
+        return jdbcTemplate.queryForObject("SELECT SUM (*) FROM transactions t JOIN products p ON t.PRODUCT_ID = p.id WHERE t.USER_ID = ? AND p.TYPE = ? AND t.TYPE = 'WITHDRAW'",
+                Integer.class,
+                userId,
+                productType);
+    }
+
 }
