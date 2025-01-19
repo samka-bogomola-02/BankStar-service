@@ -6,11 +6,12 @@ import bank.recommendationservice.fintech.rule.RuleSetText;
 import bank.recommendationservice.fintech.rule.impl.DebitDepositsTotalGreaterThanWithdraws;
 import bank.recommendationservice.fintech.rule.impl.DebitWithdrawsTotalGreaterThan100_000;
 import bank.recommendationservice.fintech.rule.impl.UsesNoCreditProducts;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 import static bank.recommendationservice.fintech.rule.RuleSetText.SIMPLE_CREDIT_TEXT;
-
+@Service
 public class SimpleCredit implements RecommendationRuleSet {
     private final UsesNoCreditProducts usesNoCreditProducts;
     private final DebitDepositsTotalGreaterThanWithdraws debitDepositsTotalGreaterThanWithdraws;

@@ -5,11 +5,12 @@ import bank.recommendationservice.fintech.rule.RecommendationRuleSet;
 import bank.recommendationservice.fintech.rule.impl.DebitDepositsTotalGreaterThanWithdraws;
 import bank.recommendationservice.fintech.rule.impl.DebitOrSavingDepositsTotalGreaterThanOrEqualsTo50_000;
 import bank.recommendationservice.fintech.rule.impl.UsesAtLeastOneDebitProduct;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 import static bank.recommendationservice.fintech.rule.RuleSetText.TOP_SAVING_TEXT;
-
+@Service
 public class TopSaving implements RecommendationRuleSet {
     private final UsesAtLeastOneDebitProduct usesAtLeastOneDebitProduct;
     private final DebitOrSavingDepositsTotalGreaterThanOrEqualsTo50_000 debitOrSavingDepositsTotalGreaterThanOrEqualsTo50_000;
