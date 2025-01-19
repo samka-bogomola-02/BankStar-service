@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -21,6 +22,7 @@ public class RecommendationDTO {
 
     public RecommendationDTO() {
     }
+
     public RecommendationDTO(UUID id, String name, String text) {
         this.id = id;
         this.name = name;

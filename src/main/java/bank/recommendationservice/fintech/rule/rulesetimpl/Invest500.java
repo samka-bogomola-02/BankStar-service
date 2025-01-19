@@ -6,11 +6,12 @@ import bank.recommendationservice.fintech.rule.impl.SavingDepositsTotalGreaterTh
 import bank.recommendationservice.fintech.rule.impl.UsesAtLeastOneDebitProduct;
 import bank.recommendationservice.fintech.rule.impl.UsesNoInvestProducts;
 import bank.recommendationservice.fintech.rule.RuleSetText;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 import static bank.recommendationservice.fintech.rule.RuleSetText.INVEST_500_TEXT;
-
+@Service
 public class Invest500 implements RecommendationRuleSet {
     private final UsesAtLeastOneDebitProduct usesAtLeastOneDebitProduct;
     private final UsesNoInvestProducts usesNoInvestProducts;
