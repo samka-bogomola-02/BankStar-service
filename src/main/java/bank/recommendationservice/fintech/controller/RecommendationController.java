@@ -2,7 +2,7 @@ package bank.recommendationservice.fintech.controller;
 
 import bank.recommendationservice.fintech.dto.RecommendationDTO;
 import bank.recommendationservice.fintech.model.RecommendationResponse;
-import bank.recommendationservice.fintech.service.RecommendationServiceNew;
+import bank.recommendationservice.fintech.service.RecommendationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +13,9 @@ import java.util.UUID;
 @RequestMapping("/recommendation")
 public class RecommendationController {
 
-    private final RecommendationServiceNew recommendationService;
+    private final RecommendationService recommendationService;
 
-    public RecommendationController(RecommendationServiceNew recommendationService) {
+    public RecommendationController(RecommendationService recommendationService) {
         this.recommendationService = recommendationService;
     }
 
