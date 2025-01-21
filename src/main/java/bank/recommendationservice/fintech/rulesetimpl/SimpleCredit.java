@@ -42,6 +42,7 @@ public class SimpleCredit implements RecommendationRuleSet {
 
     @Override
     public RecommendationDTO recommend(UUID userId) {
+        logger.info("***** SimpleCredit *****");
         if (userId == null) {
             logger.error("userId не должен быть null");
             throw new IllegalArgumentException("userId не должен быть null");
@@ -50,6 +51,7 @@ public class SimpleCredit implements RecommendationRuleSet {
         boolean noCreditProducts = usesNoCreditProducts.evaluate(userId);
         boolean depositsGreaterThanWithdraws = debitDepositsTotalGreaterThanWithdraws.evaluate(userId);
         boolean withdrawalsGreaterThan100k = debitWithdrawsTotalGreaterThan100_000.evaluate(userId);
+
 
         logger.info("Проверка рекомендаций для пользователя с ID: {}", userId);
         logger.info("Не использует кредитные продукты: {}", noCreditProducts);
@@ -60,9 +62,9 @@ public class SimpleCredit implements RecommendationRuleSet {
             logger.info("Рекомендация для пользователя с ID {}: Простой кредит", userId);
             return new RecommendationDTO(UUID.fromString("ab138afb-f3ba-4a93-b74f-0fcee86d447f"),
                     "Простой кредит", "Рекомендуем простой кредит.");
+        } else {
+            logger.info("Пользователь с ID: {} не подходит под рекомендацию. Не все условия выполнены", userId);
+            return null;
         }
-
-        logger.info("Рекомендация для пользователя с ID {}: нет подходящих условий", userId);
-        return new RecommendationDTO(); // Возвращаем пустую рекомендацию, если условия не выполнены
     }
 }

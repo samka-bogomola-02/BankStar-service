@@ -42,6 +42,7 @@ public class TopSaving implements RecommendationRuleSet {
 
     @Override
     public RecommendationDTO recommend(UUID userId) {
+        logger.info("***** TopSaving *****");
         if (userId == null) {
             logger.error("userId не должен быть null");
             throw new IllegalArgumentException("userId не должен быть null");
@@ -57,12 +58,12 @@ public class TopSaving implements RecommendationRuleSet {
         logger.info("Общая сумма дебетовых депозитов больше суммы снятий: {}", depositsGreaterThanWithdrawals);
 
         if (hasDebitProduct && depositsGreaterThanOrEqualsTo50k && depositsGreaterThanWithdrawals) {
-            logger.info("Рекомендация для пользователя с ID {}: Top Saving", userId);
+            logger.info("Пользователь с ID {}: подходит под рекомендацию. Все условия выполнены", userId);
             return new RecommendationDTO(UUID.fromString("59efc529-2fff-41af-baff-90ccd7402925"),
                     "Top Saving", "Рекомендуем Top Saving.");
+        } else {
+            logger.info("Пользователь с ID: {} не подходит под рекомендацию. Не все условия выполнены", userId);
+            return null;
         }
-
-        logger.info("Рекомендация для пользователя с ID {}: нет подходящих условий", userId);
-        return new RecommendationDTO(); // Возвращаем пустую рекомендацию, если условия не выполнены
     }
 }

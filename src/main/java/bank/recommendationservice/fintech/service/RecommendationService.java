@@ -20,18 +20,10 @@ public class RecommendationService {
     private static final Logger logger = LoggerFactory.getLogger(RecommendationService.class);
 
     public List<RecommendationDTO> getRecommendations(UUID userId) {
-        logger.info("Запрос рекомендаций для пользователя с ID: {}", userId);
+        logger.info("RecommendationService: Запрос рекомендаций для пользователя с ID: {}", userId);
 
         List<RecommendationDTO> result = ruleSets.stream()
-                .map(provider -> {
-                    RecommendationDTO recommendation = provider.recommend(userId);
-                    if (recommendation != null) {
-                        logger.info("Добавлена рекомендация от {}: {}", provider.getClass().getSimpleName(), recommendation);
-                    } else {
-                        logger.warn("Рекомендация не найдена для пользователя с ID: {} от {}", userId, provider.getClass().getSimpleName());
-                    }
-                    return recommendation;
-                })
+                .map(p-> p.recommend(userId))
                 .filter(Objects::nonNull) // Убираем null значения
                 .collect(Collectors.toList()); // Собираем результат в список
 

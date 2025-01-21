@@ -1,6 +1,7 @@
 package bank.recommendationservice.fintech.rulesetimpl;
 
 import bank.recommendationservice.fintech.dto.RecommendationDTO;
+import bank.recommendationservice.fintech.exception.NullArgumentException;
 import bank.recommendationservice.fintech.interfaces.RecommendationRuleSet;
 import bank.recommendationservice.fintech.ruleimpl.SavingDepositsTotalGreaterThan1_000;
 import bank.recommendationservice.fintech.ruleimpl.UsesAtLeastOneDebitProduct;
@@ -18,7 +19,7 @@ public class Invest500 implements RecommendationRuleSet {
 
     private final UsesAtLeastOneDebitProduct usesAtLeastOneDebitProduct;
     private final UsesNoInvestProducts usesNoInvestProducts;
-    private  final SavingDepositsTotalGreaterThan1_000 savingDepositsTotalGreaterThan1_000;
+    private final SavingDepositsTotalGreaterThan1_000 savingDepositsTotalGreaterThan1_000;
 
 public Invest500(UsesAtLeastOneDebitProduct usesAtLeastOneDebitProduct,
                  UsesNoInvestProducts usesNoInvestProducts,
@@ -45,7 +46,7 @@ public Invest500(UsesAtLeastOneDebitProduct usesAtLeastOneDebitProduct,
     public RecommendationDTO recommend(UUID userId) {
         if (userId == null) {
             logger.error("userId не должен быть null");
-            throw new IllegalArgumentException("userId не должен быть null");
+            throw new NullArgumentException("userId не должен быть null");
         }
 
         boolean hasDebitProduct = usesAtLeastOneDebitProduct.evaluate(userId);
@@ -53,17 +54,15 @@ public Invest500(UsesAtLeastOneDebitProduct usesAtLeastOneDebitProduct,
         boolean hasSufficientSavings = savingDepositsTotalGreaterThan1_000.evaluate(userId);
 
         logger.info("Проверка рекомендаций для пользователя с ID: {}", userId);
-        logger.info("Использует хотя бы один дебетовый продукт: {}", hasDebitProduct);
-        logger.info("Не использует инвестиционные продукты: {}", hasNoInvestProducts);
-        logger.info("Общая сумма сбережений больше 1000: {}", hasSufficientSavings);
+
 
         if (hasDebitProduct && hasNoInvestProducts && hasSufficientSavings) {
             logger.info("Рекомендация для пользователя с ID {}: Invest500", userId);
             return new RecommendationDTO(UUID.fromString("147f6a0f-3b91-413b-ab99-87f081d60d5a"),
                     "Invest500", "Рекомендуем инвестировать 500.");
+        } else {
+            logger.info("Пользователь с ID: {} не подходит под рекомендацию. Не все условия выполнены", userId);
+            return null;
         }
-
-        logger.info("Рекомендация для пользователя с ID {}: нет подходящих условий", userId);
-        return new RecommendationDTO(); // Возвращаем пустую рекомендацию, если условия не выполнены
     }
 }
