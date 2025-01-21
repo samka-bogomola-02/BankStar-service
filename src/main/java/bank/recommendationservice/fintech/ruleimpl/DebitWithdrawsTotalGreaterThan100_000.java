@@ -1,9 +1,10 @@
 package bank.recommendationservice.fintech.ruleimpl;
 
-import bank.recommendationservice.fintech.ProductType;
-import bank.recommendationservice.fintech.repository.RecommendationsRepository;
+import bank.recommendationservice.fintech.exception.NullArgumentException;
+import bank.recommendationservice.fintech.exception.RepositoryNotInitializedException;
 import bank.recommendationservice.fintech.interfaces.Rule;
-import bank.recommendationservice.fintech.util.RuleUtil;
+import bank.recommendationservice.fintech.other.ProductType;
+import bank.recommendationservice.fintech.repository.RecommendationsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,7 @@ public class DebitWithdrawsTotalGreaterThan100_000 implements Rule {
     public DebitWithdrawsTotalGreaterThan100_000(RecommendationsRepository recommendationsRepository) {
         if (recommendationsRepository == null) {
             logger.error("RecommendationsRepository не должен быть null");
-            throw new IllegalArgumentException("recommendationsRepository не должен быть null");
+            throw new RepositoryNotInitializedException("recommendationsRepository не должен быть null");
         }
         this.recommendationsRepository = recommendationsRepository;
     }
@@ -31,18 +32,12 @@ public class DebitWithdrawsTotalGreaterThan100_000 implements Rule {
     public boolean evaluate(UUID userId) {
         if (userId == null) {
             logger.error("userId не должен быть null");
-            throw new IllegalArgumentException("userId не должен быть null");
+            throw new NullArgumentException("userId не должен быть null");
         }
 
-        Integer debitWithdrawsTotal = recommendationsRepository.getWithdrawsOfTypeTotal(userId, ProductType.DEBIT.name());
-        RuleUtil.validateNotNull(debitWithdrawsTotal);
-
+        int debitWithdrawsTotal = recommendationsRepository.getWithdrawsOfTypeTotal(userId, ProductType.DEBIT.name());
         int threshold = 100_000;
-        boolean result = debitWithdrawsTotal > threshold;
 
-        logger.info("Проверка: Общая сумма дебетовых снятий для пользователя с ID {}: {}", userId, debitWithdrawsTotal);
-        logger.info("Результат проверки для пользователя с ID {}: {}", userId, result);
-
-        return result;
+        return debitWithdrawsTotal > threshold;
     }
 }

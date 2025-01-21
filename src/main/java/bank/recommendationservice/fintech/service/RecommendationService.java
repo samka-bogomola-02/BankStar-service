@@ -17,27 +17,15 @@ import java.util.stream.Collectors;
 public class RecommendationService {
     @Autowired
     private List<RecommendationRuleSet> ruleSets;
-
-
     private static final Logger logger = LoggerFactory.getLogger(RecommendationService.class);
 
     public List<RecommendationDTO> getRecommendations(UUID userId) {
-        logger.info("Запрос рекомендаций для пользователя с ID: {}", userId);
-
+        logger.info("Вызван метод getRecommendations для пользователя с ID: {}", userId);
         List<RecommendationDTO> result = ruleSets.stream()
-                .map(provider -> {
-                    RecommendationDTO recommendation = provider.recommend(userId);
-                    if (recommendation != null) {
-                        logger.info("Добавлена рекомендация от {}: {}", provider.getClass().getSimpleName(), recommendation);
-                    } else {
-                        logger.warn("Рекомендация не найдена для пользователя с ID: {} от {}", userId, provider.getClass().getSimpleName());
-                    }
-                    return recommendation;
-                })
-                .filter(Objects::nonNull) // Убираем null значения
-                .collect(Collectors.toList()); // Собираем результат в список
-
-        logger.info("Количество найденных рекомендаций: {}", result.size());
+                .map(p-> p.recommend(userId))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        logger.debug("Количество найденных рекомендаций для пользователя с ID: {}: {}", userId, result.size());
         return result;
     }
 }

@@ -1,13 +1,12 @@
 package bank.recommendationservice.fintech.controller;
 
+import bank.recommendationservice.fintech.other.HealthCheckResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,16 +39,4 @@ public class HealthCheckController {
         return ResponseEntity.ok(response);
     }
 
-
-    @Schema(description = "Ответ проверки работоспособности приложения")
-    @Getter
-    @Setter
-    private static class HealthCheckResponse {
-        @Schema(description = "Статус приложения (UP - работает)")
-        private String status;
-        @Schema(description = "Имя приложения")
-        private String appName;
-        @Schema(description = "Версия приложения")
-        private String appVersion;
-    }
 }

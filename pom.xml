@@ -72,7 +72,6 @@
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>6.2.5.Final</version> <!-- Убедитесь, что используете последнюю версию -->
 		</dependency>
 
 		<dependency>
