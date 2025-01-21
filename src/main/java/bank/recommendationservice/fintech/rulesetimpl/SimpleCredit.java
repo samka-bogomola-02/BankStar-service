@@ -63,6 +63,6 @@ public class SimpleCredit implements RecommendationRuleSet {
         }
 
         logger.info("Рекомендация для пользователя с ID {}: нет подходящих условий", userId);
-        return new RecommendationDTO(); // Возвращаем пустую рекомендацию, если условия не выполнены
+        return null;
     }
 }
