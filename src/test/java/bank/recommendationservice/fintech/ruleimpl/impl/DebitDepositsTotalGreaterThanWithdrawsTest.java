@@ -34,7 +34,7 @@ class DebitDepositsTotalGreaterThanWithdrawsTest {
     }
 
     @Test
-    @DisplayName("Возращает true, когда сумма пополнений больше суммы трат")
+    @DisplayName("Возвращает true, когда сумма пополнений больше суммы трат")
     void testEvaluatePositive_1() {
         when(recommendationsRepository.getDepositsOfTypeTotal(userId, ProductType.DEBIT.name())).thenReturn(TOTAL_HIGH);
         when(recommendationsRepository.getWithdrawsOfTypeTotal(userId, ProductType.DEBIT.name())).thenReturn(TOTAL_LOW);
