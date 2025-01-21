@@ -1,9 +1,10 @@
 package bank.recommendationservice.fintech.ruleimpl;
 
+import bank.recommendationservice.fintech.exception.NullArgumentException;
+import bank.recommendationservice.fintech.exception.RepositoryNotInitializedException;
 import bank.recommendationservice.fintech.other.ProductType;
 import bank.recommendationservice.fintech.repository.RecommendationsRepository;
 import bank.recommendationservice.fintech.interfaces.Rule;
-import bank.recommendationservice.fintech.util.RuleUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,7 @@ public class DebitDepositsTotalGreaterThanWithdraws implements Rule {
     public DebitDepositsTotalGreaterThanWithdraws(RecommendationsRepository recommendationsRepository) {
         if (recommendationsRepository == null) {
             logger.error("RecommendationsRepository не должен быть null");
-            throw new IllegalArgumentException("recommendationsRepository не должен быть null");
+            throw new RepositoryNotInitializedException("recommendationsRepository не должен быть null");
         }
         this.recommendationsRepository = recommendationsRepository;
     }
@@ -33,21 +34,13 @@ public class DebitDepositsTotalGreaterThanWithdraws implements Rule {
     public boolean evaluate(UUID userId) {
         if (userId == null) {
             logger.error("userId не должен быть null");
-            throw new IllegalArgumentException("userId не должен быть null");
+            throw new NullArgumentException("userId не должен быть null");
         }
 
-        Integer debitDepositsTotal = recommendationsRepository.getDepositsOfTypeTotal(userId, ProductType.DEBIT.name());
-        RuleUtil.validateNotNull(debitDepositsTotal);
+        int debitDepositsTotal = recommendationsRepository.getDepositsOfTypeTotal(userId, ProductType.DEBIT.name());
+        int debitWithdrawsTotal = recommendationsRepository.getWithdrawsOfTypeTotal(userId, ProductType.DEBIT.name());
 
-        Integer debitWithdrawsTotal = recommendationsRepository.getWithdrawsOfTypeTotal(userId, ProductType.DEBIT.name());
-        RuleUtil.validateNotNull(debitWithdrawsTotal);
-
-        logger.info("Проверка: Общая сумма дебетовых депозитов: {}, Общая сумма дебетовых снятий: {}", debitDepositsTotal, debitWithdrawsTotal);
-
-        boolean result = debitDepositsTotal > debitWithdrawsTotal;
-        logger.info("Результат проверки для пользователя с ID {}: {}", userId, result);
-
-        return result;
+        return debitDepositsTotal > debitWithdrawsTotal;
     }
 }
 
