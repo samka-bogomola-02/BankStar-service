@@ -7,6 +7,7 @@ import bank.recommendationservice.fintech.rulesetimpl.SimpleCredit;
 import bank.recommendationservice.fintech.rulesetimpl.TopSaving;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,16 +16,15 @@ import java.util.UUID;
 
 @Service
 public class RecommendationService {
-    private final Invest500 invest500;
-    private final SimpleCredit simpleCredit;
-    private final TopSaving topSaving;
+    @Autowired
+    private Invest500 invest500;
+    @Autowired
+    private SimpleCredit simpleCredit;
+    @Autowired
+    private TopSaving topSaving;
+
     private static final Logger logger = LoggerFactory.getLogger(RecommendationService.class);
 
-    public RecommendationService(Invest500 invest500, SimpleCredit simpleCredit, TopSaving topSaving) {
-        this.invest500 = invest500;
-        this.simpleCredit = simpleCredit;
-        this.topSaving = topSaving;
-    }
     public List<RecommendationDTO> getRecommendations(UUID userId) {
         logger.info("Запрос рекомендаций для пользователя с ID: {}", userId);
         List<RecommendationDTO> result = new ArrayList<>();

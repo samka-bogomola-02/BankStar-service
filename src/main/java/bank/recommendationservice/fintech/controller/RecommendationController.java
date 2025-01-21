@@ -12,7 +12,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/recommendation")
 public class RecommendationController {
-
     private final RecommendationService recommendationService;
 
     public RecommendationController(RecommendationService recommendationService) {
