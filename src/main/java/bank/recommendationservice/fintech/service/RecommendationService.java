@@ -22,6 +22,7 @@ public class RecommendationService {
     private SimpleCredit simpleCredit;
     @Autowired
     private TopSaving topSaving;
+
     private static final Logger logger = LoggerFactory.getLogger(RecommendationService.class);
 
     public List<RecommendationDTO> getRecommendations(UUID userId) {
