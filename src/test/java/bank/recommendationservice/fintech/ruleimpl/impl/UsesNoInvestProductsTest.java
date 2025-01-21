@@ -1,7 +1,7 @@
 package bank.recommendationservice.fintech.ruleimpl.impl;
 
 import bank.recommendationservice.fintech.repository.RecommendationsRepository;
-import bank.recommendationservice.fintech.ProductType;
+import bank.recommendationservice.fintech.other.ProductType;
 import bank.recommendationservice.fintech.ruleimpl.UsesNoInvestProducts;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

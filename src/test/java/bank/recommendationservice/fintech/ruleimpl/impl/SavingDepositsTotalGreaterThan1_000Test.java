@@ -2,7 +2,7 @@ package bank.recommendationservice.fintech.ruleimpl.impl;
 
 import bank.recommendationservice.fintech.exception.NoTransactionsFoundException;
 import bank.recommendationservice.fintech.repository.RecommendationsRepository;
-import bank.recommendationservice.fintech.ProductType;
+import bank.recommendationservice.fintech.other.ProductType;
 import bank.recommendationservice.fintech.ruleimpl.SavingDepositsTotalGreaterThan1_000;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

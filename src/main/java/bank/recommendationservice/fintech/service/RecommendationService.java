@@ -17,8 +17,6 @@ import java.util.stream.Collectors;
 public class RecommendationService {
     @Autowired
     private List<RecommendationRuleSet> ruleSets;
-
-
     private static final Logger logger = LoggerFactory.getLogger(RecommendationService.class);
 
     public List<RecommendationDTO> getRecommendations(UUID userId) {

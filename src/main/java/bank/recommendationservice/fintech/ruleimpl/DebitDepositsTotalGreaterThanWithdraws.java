@@ -1,6 +1,6 @@
 package bank.recommendationservice.fintech.ruleimpl;
 
-import bank.recommendationservice.fintech.ProductType;
+import bank.recommendationservice.fintech.other.ProductType;
 import bank.recommendationservice.fintech.repository.RecommendationsRepository;
 import bank.recommendationservice.fintech.interfaces.Rule;
 import bank.recommendationservice.fintech.util.RuleUtil;

@@ -1,6 +1,6 @@
 package bank.recommendationservice.fintech.ruleimpl;
 
-import bank.recommendationservice.fintech.ProductType;
+import bank.recommendationservice.fintech.other.ProductType;
 import bank.recommendationservice.fintech.repository.RecommendationsRepository;
 import bank.recommendationservice.fintech.interfaces.Rule;
 import bank.recommendationservice.fintech.util.RuleUtil;
@@ -18,7 +18,6 @@ public class DebitOrSavingDepositsTotalGreaterThanOrEqualsTo50_000 implements Ru
 
     public DebitOrSavingDepositsTotalGreaterThanOrEqualsTo50_000(RecommendationsRepository recommendationsRepository) {
         if (recommendationsRepository == null) {
-            logger.error("RecommendationsRepository не должен быть null");
             throw new IllegalArgumentException("recommendationsRepository не должен быть null");
         }
         this.recommendationsRepository = recommendationsRepository;
@@ -27,7 +26,6 @@ public class DebitOrSavingDepositsTotalGreaterThanOrEqualsTo50_000 implements Ru
     @Override
     public boolean evaluate(UUID userId) {
         if (userId == null) {
-            logger.error("userId не должен быть null");
             throw new IllegalArgumentException("userId не должен быть null");
         }
 
@@ -37,12 +35,8 @@ public class DebitOrSavingDepositsTotalGreaterThanOrEqualsTo50_000 implements Ru
         Integer savingDepositsTotal = recommendationsRepository.getDepositsOfTypeTotal(userId, ProductType.SAVING.name());
         RuleUtil.validateNotNull(savingDepositsTotal);
 
-        logger.info("Проверка: Общая сумма дебетовых депозитов: {}, Общая сумма сберегательных депозитов: {}", debitDepositsTotal, savingDepositsTotal);
-
         int threshold = 50000;
         boolean result = debitDepositsTotal >= threshold || savingDepositsTotal >= threshold;
-
-        logger.info("Результат проверки для пользователя с ID {}: {}", userId, result);
 
         return result;
     }
