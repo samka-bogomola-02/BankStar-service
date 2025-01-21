@@ -20,14 +20,12 @@ public class RecommendationService {
     private static final Logger logger = LoggerFactory.getLogger(RecommendationService.class);
 
     public List<RecommendationDTO> getRecommendations(UUID userId) {
-        logger.info("RecommendationService: Запрос рекомендаций для пользователя с ID: {}", userId);
-
+        logger.info("Вызван метод getRecommendations для пользователя с ID: {}", userId);
         List<RecommendationDTO> result = ruleSets.stream()
                 .map(p-> p.recommend(userId))
-                .filter(Objects::nonNull) // Убираем null значения
-                .collect(Collectors.toList()); // Собираем результат в список
-
-        logger.info("Количество найденных рекомендаций: {}", result.size());
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        logger.debug("Количество найденных рекомендаций для пользователя с ID: {}: {}", userId, result.size());
         return result;
     }
 }
