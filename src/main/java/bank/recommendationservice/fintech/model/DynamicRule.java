@@ -1,20 +1,22 @@
 package bank.recommendationservice.fintech.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
 import java.util.Objects;
 
-//@Entity
-//@Table(name = "dynamic_rule")
+@Entity
+@Table(name = "dynamic_rule")
 @Getter
 @Setter
 public class DynamicRule {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-//    @ElementCollection
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "dynamic_rule_id")
     private List<Query> queries;
 
     public DynamicRule() {

@@ -1,5 +1,6 @@
 package bank.recommendationservice.fintech.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,9 +9,19 @@ import java.util.Objects;
 
 @Setter
 @Getter
+@Entity
+@Table(name = "query")
 public class Query {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(name = "query", nullable = false)
     private String query;
+    @ElementCollection
+    @CollectionTable(name = "query_arguments", joinColumns = @JoinColumn(name = "query_id"))
+    @Column(name = "argument")
     private List<String> arguments;
+    @Column(name = "negate", nullable = false)
     private boolean negate;
     public Query() {
     }
