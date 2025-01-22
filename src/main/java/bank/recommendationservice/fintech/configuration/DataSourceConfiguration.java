@@ -18,6 +18,7 @@ public class DataSourceConfiguration {
             @Value("${application.fintech_service-db.url}") String serviceRecommendationsUrl) {
         var dataSource = new HikariDataSource();
         dataSource.setJdbcUrl(serviceRecommendationsUrl);
+        dataSource.setDriverClassName("org.h2.Driver");
         dataSource.setReadOnly(true);
         return dataSource;
     }
