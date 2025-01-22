@@ -23,11 +23,11 @@ public class DataSourceConfiguration {
         return dataSource;
     }
 
-    @Primary
-    @Bean(name = "defaultDataSource")
-    public DataSource defaultDataSource(DataSourceProperties properties) {
-        return properties.initializeDataSourceBuilder().build();
-    }
+//    @Primary
+//    @Bean(name = "defaultDataSource")
+//    public DataSource defaultDataSource(DataSourceProperties properties) {
+//        return properties.initializeDataSourceBuilder().build();
+//    }
 
     @Bean(name = "recommendationsJdbcTemplate")
     public JdbcTemplate recommendationsJdbcTemplate(
