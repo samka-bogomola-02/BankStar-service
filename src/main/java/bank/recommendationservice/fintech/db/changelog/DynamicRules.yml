@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: ibogomolova
+      changes:
+        - createTable:
+            tableName: dynamic_rule
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: queries
+                  type: text
+                  constraints:
+                    nullable: false
