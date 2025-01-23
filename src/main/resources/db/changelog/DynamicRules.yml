@@ -1,0 +1,67 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: ibogomolova
+      changes:
+        - createTable:
+            tableName: dynamic_rule
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: queries
+                  type: text
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 3
+      author: ibogomolova
+      changes:
+        - createTable:
+            tableName: query
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: query
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: negate
+                  type: boolean
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 4
+      author: ibogomolova
+      changes:
+        - createTable:
+            tableName: query_arguments
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: query_id
+                  type: bigserial
+                  constraints:
+                    nullable: false
+              - column:
+                  name: argument
+                  type: text
+                  constraints:
+                    nullable: false
