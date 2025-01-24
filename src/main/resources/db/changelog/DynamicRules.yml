@@ -1,39 +1,50 @@
 databaseChangeLog:
   - changeSet:
       id: 2
-      author: ibogomolova
+      author: bogomolova
       changes:
+        - createTable:
+            tableName: recommendation_rule
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    autoIncrement: true
+              - column:
+                  name: product_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: product_id
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: product_text
+                  type: text
+
         - createTable:
             tableName: dynamic_rule
             columns:
               - column:
                   name: id
-                  type: bigserial
+                  type: bigint
                   constraints:
                     primaryKey: true
                     nullable: false
+                    autoIncrement: true
               - column:
-                  name: queries
-                  type: text
+                  name: recommendation_rule_id
+                  type: bigint
                   constraints:
-                    nullable: false
-
-  - changeSet:
-      id: 3
-      author: ibogomolova
-      changes:
-        - createTable:
-            tableName: query
-            columns:
-              - column:
-                  name: id
-                  type: bigserial
-                  constraints:
-                    primaryKey: true
                     nullable: false
               - column:
                   name: query
-                  type: text
+                  type: varchar(255)
                   constraints:
                     nullable: false
               - column:
@@ -42,26 +53,37 @@ databaseChangeLog:
                   constraints:
                     nullable: false
 
-  - changeSet:
-      id: 4
-      author: ibogomolova
-      changes:
         - createTable:
-            tableName: query_arguments
+            tableName: dynamic_rule_arguments
             columns:
               - column:
                   name: id
-                  type: bigserial
+                  type: bigint
                   constraints:
                     primaryKey: true
                     nullable: false
+                    autoIncrement: true
               - column:
-                  name: query_id
-                  type: bigserial
+                  name: dynamic_rule_id
+                  type: bigint
                   constraints:
                     nullable: false
               - column:
-                  name: argument
-                  type: text
+                  name: arguments
+                  type: varchar(255)
                   constraints:
                     nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: dynamic_rule
+            baseColumnNames: recommendation_rule_id
+            referencedTableName: recommendation_rule
+            referencedColumnNames: id
+            constraintName: fk_dynamic_rule_recommendation_rule
+
+        - addForeignKeyConstraint:
+            baseTableName: dynamic_rule_arguments
+            baseColumnNames: dynamic_rule_id
+            referencedTableName: dynamic_rule
+            referencedColumnNames: id
+            constraintName: fk_dynamic_rule_arguments_dynamic_rule
