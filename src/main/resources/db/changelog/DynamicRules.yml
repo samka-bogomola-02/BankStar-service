@@ -4,7 +4,7 @@ databaseChangeLog:
       author: bogomolova
       changes:
         - createTable:
-            tableName: recommendation_rule
+            tableName: dynamic_rule
             columns:
               - column:
                   name: id
@@ -20,7 +20,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: product_id
-                  type: varchar(255)
+                  type: UUID
                   constraints:
                     nullable: false
               - column:
@@ -28,7 +28,7 @@ databaseChangeLog:
                   type: text
 
         - createTable:
-            tableName: dynamic_rule
+            tableName: dynamic_rule_query
             columns:
               - column:
                   name: id
@@ -38,7 +38,7 @@ databaseChangeLog:
                     nullable: false
                     autoIncrement: true
               - column:
-                  name: recommendation_rule_id
+                  name: dynamic_rule_id
                   type: bigint
                   constraints:
                     nullable: false
@@ -54,7 +54,7 @@ databaseChangeLog:
                     nullable: false
 
         - createTable:
-            tableName: dynamic_rule_arguments
+            tableName: dynamic_rule_query_arguments
             columns:
               - column:
                   name: id
@@ -64,26 +64,26 @@ databaseChangeLog:
                     nullable: false
                     autoIncrement: true
               - column:
-                  name: dynamic_rule_id
+                  name: dynamic_rule_query_id
                   type: bigint
                   constraints:
                     nullable: false
               - column:
-                  name: arguments
+                  name: argument
                   type: varchar(255)
                   constraints:
                     nullable: false
 
         - addForeignKeyConstraint:
-            baseTableName: dynamic_rule
-            baseColumnNames: recommendation_rule_id
-            referencedTableName: recommendation_rule
-            referencedColumnNames: id
-            constraintName: fk_dynamic_rule_recommendation_rule
-
-        - addForeignKeyConstraint:
-            baseTableName: dynamic_rule_arguments
+            baseTableName: dynamic_rule_query
             baseColumnNames: dynamic_rule_id
             referencedTableName: dynamic_rule
             referencedColumnNames: id
-            constraintName: fk_dynamic_rule_arguments_dynamic_rule
+            constraintName: fk_dynamic_rule_query_dynamic_rule
+
+        - addForeignKeyConstraint:
+            baseTableName: dynamic_rule_query_arguments
+            baseColumnNames: dynamic_rule_query_id
+            referencedTableName: dynamic_rule_query
+            referencedColumnNames: id
+            constraintName: fk_dynamic_rule_query_arguments_dynamic_rule_query
