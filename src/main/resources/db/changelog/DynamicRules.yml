@@ -1,0 +1,89 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: bogomolova
+      changes:
+        - createTable:
+            tableName: dynamic_rule
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    autoIncrement: true
+              - column:
+                  name: product_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: product_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: product_text
+                  type: text
+
+        - createTable:
+            tableName: dynamic_rule_query
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    autoIncrement: true
+              - column:
+                  name: dynamic_rule_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: query
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: negate
+                  type: boolean
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: dynamic_rule_query_arguments
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    autoIncrement: true
+              - column:
+                  name: dynamic_rule_query_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: argument
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: dynamic_rule_query
+            baseColumnNames: dynamic_rule_id
+            referencedTableName: dynamic_rule
+            referencedColumnNames: id
+            constraintName: fk_dynamic_rule_query_dynamic_rule
+
+        - addForeignKeyConstraint:
+            baseTableName: dynamic_rule_query_arguments
+            baseColumnNames: dynamic_rule_query_id
+            referencedTableName: dynamic_rule_query
+            referencedColumnNames: id
+            constraintName: fk_dynamic_rule_query_arguments_dynamic_rule_query
