@@ -1,10 +1,12 @@
 package bank.recommendationservice.fintech.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,24 +17,24 @@ import java.util.Objects;
 @Setter
 public class DynamicRuleQuery {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "dynamic_rule_query_seq_gen")
+    @SequenceGenerator(name = "dynamic_rule_query_seq_gen", sequenceName = "dynamic_rule_query_seq", allocationSize = 1)
     @JsonIgnore
     private Long id;
 
     @Column(name = "query", nullable = false)
     private String query;
 
-    @ElementCollection
-    @CollectionTable(name = "dynamic_rule_query_arguments", joinColumns = @JoinColumn(name = "dynamic_rule_query_id"))
-    @Column(name = "argument", nullable = false)
-    private List<String> arguments;
+    @OneToMany(mappedBy = "dynamicRuleQuery", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonProperty("arguments")
+    private List<DynamicRuleQueryArgument> arguments = new ArrayList<>();
 
     @Column(name = "negate", nullable = false)
     private boolean negate;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "dynamic_rule_id")
+    @JoinColumn(name = "dynamic_rule_id", nullable = false)
     private DynamicRule dynamicRule;
 
     public DynamicRuleQuery() {
@@ -59,5 +61,13 @@ public class DynamicRuleQuery {
                 ", arguments=" + arguments +
                 ", negate=" + negate +
                 '}';
+    }
+    public void addArgument(DynamicRuleQueryArgument argument) {
+        arguments.add(argument);
+        argument.setDynamicRuleQuery(this); // Устанавливаем связь с текущим правилом
+    }
+    public void removeQuery(DynamicRuleQueryArgument argument) {
+        arguments.remove(argument);
+        argument.setDynamicRuleQuery(null); // Убираем связь с текущим правилом
     }
 }
