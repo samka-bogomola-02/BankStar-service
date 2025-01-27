@@ -19,7 +19,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class DynamicRule {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "dynamic_rule_seq_gen")
+    @SequenceGenerator(name = "dynamic_rule_seq_gen", sequenceName = "dynamic_rule_seq", allocationSize = 1)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
@@ -36,8 +37,6 @@ public class DynamicRule {
     @JoinColumn(name = "dynamic_rule_id")
     @JsonProperty("rule")
     private List<DynamicRuleQuery> queries;
-
-
     public DynamicRule(String productName, UUID productId, String productText, List<DynamicRuleQuery> queries) {
         this.productName = productName;
         this.productId = productId;
@@ -67,5 +66,14 @@ public class DynamicRule {
                 ", productText='" + productText + '\'' +
                 ", queries=" + queries +
                 '}';
+    }
+    public void addQuery(DynamicRuleQuery query) {
+        queries.add(query);
+        query.setDynamicRule(this); // Устанавливаем связь с текущим правилом
+    }
+
+    public void removeQuery(DynamicRuleQuery query) {
+        queries.remove(query);
+        query.setDynamicRule(null); // Убираем связь с текущим правилом
     }
 }
