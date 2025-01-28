@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -51,6 +50,13 @@ public class RecommendationDynamicRuleService {
         return dynamicRuleRepository.save(rule);
     }
 
+    /**
+     * Удаляет динамическое правило по его идентификатору.
+     *
+     * @param id идентификатор правила, которое нужно удалить
+     * @return удаленное правило
+     * @throws RulesNotFoundException если правило не найдено
+     */
 
     public DynamicRule deleteDynamicRule(Long id) {
         DynamicRule ruleToRemove = dynamicRuleRepository.findById(id)
@@ -58,6 +64,12 @@ public class RecommendationDynamicRuleService {
         dynamicRuleRepository.delete(ruleToRemove);
         return ruleToRemove;
     }
+
+    /**
+     * Получает список всех существующих динамических правил.
+     *
+     * @return список динамических правил
+     */
 
     public List<DynamicRule> getAllDynamicRules() {
         return dynamicRuleRepository.findAll();

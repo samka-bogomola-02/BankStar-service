@@ -25,6 +25,14 @@ public class HealthCheckController {
     @Value("${build.version}")
     private String appVersion;
 
+
+    /**
+     * Эндпоинт для проверки работоспособности приложения.
+     * <p>
+     * Возвращает ответ со статусом 200 и телом в формате JSON, содержащим имя приложения, версию и статус.
+     *
+     * @return ответ, содержащий имя приложения, версию и статус
+     */
     @GetMapping("/health")
     @Operation(summary = "Проверка работоспособности приложения", description = "Возвращает статус приложения и версию")
     @ApiResponses(value = {
@@ -38,5 +46,4 @@ public class HealthCheckController {
         response.put("appVersion", appVersion);
         return ResponseEntity.ok(response);
     }
-
 }
