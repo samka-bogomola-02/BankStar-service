@@ -25,29 +25,14 @@ public class RecommendationDynamicRuleService {
     @Transactional
     public DynamicRule addRule(DynamicRule rule) {
         logger.info("Добавление нового правила: {}", rule.toString());
-        List<DynamicRuleQuery> queries = rule.getQueries();
-        List<DynamicRuleQuery> updatedQueries = new ArrayList<>(); // Новый список для обновленных запросов
-
-        if (queries != null) {
-            for (DynamicRuleQuery query : queries) {
-                List<DynamicRuleQueryArgument> arguments = query.getArguments();
-                List<DynamicRuleQueryArgument> updatedArguments = new ArrayList<>();
-
-                if (arguments != null) {
-                    updatedArguments.addAll(arguments);
+        if (rule.getQueries() != null) {
+            rule.getQueries().forEach(query -> {
+                if (query.getArguments() != null) {
+                    query.getArguments().forEach(argument -> argument.setDynamicRuleQuery(query));
                 }
-                // Добавление нового аргумента
-                updatedArguments.add(new DynamicRuleQueryArgument());
-                // Устанавливаем обновленный список аргументов
-                query.setArguments(updatedArguments);
-                // Устанавливаем связь с правилом
                 query.setDynamicRule(rule);
-                // Добавляем обновленный запрос в новый список
-                updatedQueries.add(query);
-            }
+            });
         }
-        // После завершения итерации устанавливаем обновленные запросы к правилу
-        rule.setQueries(updatedQueries);
         return dynamicRuleRepository.save(rule);
     }
 
