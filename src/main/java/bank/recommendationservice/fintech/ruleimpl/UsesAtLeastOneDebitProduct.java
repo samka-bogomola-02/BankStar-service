@@ -2,9 +2,9 @@ package bank.recommendationservice.fintech.ruleimpl;
 
 import bank.recommendationservice.fintech.exception.NullArgumentException;
 import bank.recommendationservice.fintech.exception.RepositoryNotInitializedException;
+import bank.recommendationservice.fintech.interfaces.Rule;
 import bank.recommendationservice.fintech.other.ProductType;
 import bank.recommendationservice.fintech.repository.RecommendationsRepository;
-import bank.recommendationservice.fintech.interfaces.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -28,6 +28,14 @@ public class UsesAtLeastOneDebitProduct implements Rule {
         this.recommendationsRepository = recommendationsRepository;
     }
 
+    /**
+     * Оценка правила:
+     * Пользователь использует как минимум один продукт с типом DEBIT
+     *
+     * @param userId - ID пользователя
+     * @return {@code true} если пользователь использует как минимум один продукт типа DEBIT;
+     * {@code false} если пользователь не использует продукты типа DEBIT
+     */
     @Override
     public boolean evaluate(UUID userId) {
         if (userId == null) {

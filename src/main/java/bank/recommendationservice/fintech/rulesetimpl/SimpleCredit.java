@@ -42,6 +42,12 @@ public class SimpleCredit implements RecommendationRuleSet {
         this.debitWithdrawsTotalGreaterThan100_000 = debitWithdrawsTotalGreaterThan100_000;
     }
 
+    /**
+     * Вызывает метод evaluate() для каждого из своих полей (usesNoCreditProducts, debitDepositsTotalGreaterThanWithdraws, debitWithdrawsTotalGreaterThan100_000)
+     * и если все методы evaluate() возвращают true, возвращает RecommendationDTO, иначе null
+     * @param userId id пользователя, для которого будут вызваны методы evaluate()
+     * @return RecommendationDTO, если пользователь подходит под рекомендацию, null - иначе
+     */
     @Override
     public RecommendationDTO recommend(UUID userId) {
         logger.info("Вызван метод evaluate() из рулсета SimpleCredit");
