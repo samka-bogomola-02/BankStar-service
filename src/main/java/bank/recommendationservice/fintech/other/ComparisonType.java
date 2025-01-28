@@ -5,11 +5,11 @@ public enum ComparisonType {
 
     LESS_THAN("<"),
 
-    EQUAL("="),
+    EQUALS("="),
 
-    GREATER_THAN_OR_EQUAL(">="),
+    GREATER_THAN_OR_EQUALS(">="),
 
-    LESS_THAN_OR_EQUAL("<=");
+    LESS_THAN_OR_EQUALS("<=");
 
     ComparisonType(String type) {
     }
