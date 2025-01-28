@@ -1,6 +1,9 @@
 package bank.recommendationservice.fintech.repository;
 
 import bank.recommendationservice.fintech.exception.NullArgumentException;
+import bank.recommendationservice.fintech.other.ComparisonType;
+import bank.recommendationservice.fintech.other.ProductType;
+import bank.recommendationservice.fintech.other.TransactionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -92,6 +95,81 @@ public class RecommendationsRepository {
                 productType);
 
         return total != null ? total : 0;
+    }
+
+    /**
+     * Возвращает true, если пользователь с id {@code userId} активно использует продукт типа {@code productType},
+     * т.е. имеет 5 и более транзакций по этому продукту.
+     *
+     * @param productType - тип продукта
+     * @param userId      - id пользователя
+     * @return {@code true}, если пользователь активно использует продукт; {@code false} - иначе
+     */
+
+    public boolean isActiveUserOfProduct(ProductType productType, UUID userId) {
+        String query = "SELECT COUNT(*) FROM transactions WHERE product_type = ? AND user_id = ?";
+
+        Object[] params = new Object[]{productType.name(), userId};
+
+        Integer count = jdbcTemplate.queryForObject(query, Integer.class, productType.name(), userId);
+
+        return count != null && count >= 5;
+    }
+
+    /**
+     * Сравнивает сумму транзакций по продукту с заданной константой на основе типа сравнения.
+     *
+     * @param productType     - тип продукта, по которому фильтруются транзакции
+     * @param transactionType - тип транзакции (например, DEPOSIT или WITHDRAW)
+     * @param userId          - ID пользователя, для которого производится проверка
+     * @param comparisonType  - тип сравнения (например, GREATER_THAN, LESS_THAN)
+     * @param constant        - константа, с которой сравнивается сумма транзакций
+     * @return {@code true} если сумма транзакций соответствует условию сравнения с константой; {@code false} в противном случае
+     * @throws IllegalArgumentException если передан недопустимый тип сравнения
+     */
+
+    public boolean compareTransactionSum(ProductType productType, TransactionType transactionType, UUID userId, ComparisonType comparisonType, int constant) {
+        String query = "SELECT SUM(amount) FROM transactions WHERE product_type = ? AND transaction_type = ? AND user_id = ?";
+        Object[] params = new Object[]{productType.name(), transactionType.name(), userId};
+        Integer sum = jdbcTemplate.queryForObject(query, Integer.class, params);
+        if (sum == null) {
+            return false; // или бросить исключение
+        }
+        return switch (comparisonType) {
+            case GREATER_THAN -> sum > constant;
+            case LESS_THAN -> sum < constant;
+            case EQUALS -> sum.equals(constant);
+            case GREATER_THAN_OR_EQUALS -> sum >= constant;
+            case LESS_THAN_OR_EQUALS -> sum <= constant;
+            default -> throw new IllegalArgumentException("Недопустимый тип сравнения: " + comparisonType);
+        };
+    }
+
+    /**
+     * Сравнивает сумму всех транзакций типа DEPOSIT с суммой всех транзакций типа WITHDRAW по продукту X.
+     *
+     * @param productType    тип продукта (DEBIT, CREDIT, INVEST, SAVING)
+     * @param comparisonType оператор сравнения (>, <, =, >=, <=)
+     * @return true, если сумма DEPOSIT больше/меньше/равна сумме WITHDRAW, false в противном случае
+     */
+
+    public boolean compareDepositWithdrawSum(ProductType productType, UUID userId, ComparisonType comparisonType) {
+        String depositQuery = "SELECT SUM(amount) FROM transactions WHERE product_type = ? AND transaction_type = 'DEPOSIT' AND user_id = ?";
+        String withdrawQuery = "SELECT SUM(amount) FROM transactions WHERE product_type = ? AND transaction_type = 'WITHDRAW' AND user_id = ?";
+        Object[] params = new Object[]{productType.name(), userId};
+        Integer depositSum = jdbcTemplate.queryForObject(depositQuery, Integer.class, params);
+        Integer withdrawSum = jdbcTemplate.queryForObject(withdrawQuery, Integer.class, params);
+        if (depositSum == null || withdrawSum == null) {
+            return false; // или бросить исключение, в зависимости от требований
+        }
+        return switch (comparisonType) {
+            case GREATER_THAN -> depositSum > withdrawSum;
+            case LESS_THAN -> depositSum < withdrawSum;
+            case EQUALS -> depositSum.equals(withdrawSum);
+            case GREATER_THAN_OR_EQUALS -> depositSum >= withdrawSum;
+            case LESS_THAN_OR_EQUALS -> depositSum <= withdrawSum;
+            default -> throw new IllegalArgumentException("Unknown comparison type: " + comparisonType);
+        };
     }
 }
 
