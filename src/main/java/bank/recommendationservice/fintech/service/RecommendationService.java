@@ -19,10 +19,17 @@ public class RecommendationService {
     private List<RecommendationRuleSet> ruleSets;
     private static final Logger logger = LoggerFactory.getLogger(RecommendationService.class);
 
+    /**
+     * Получение списка рекомендаций для пользователя
+     *
+     * @param userId - уникальный идентификатор пользователя
+     * @return список рекомендаций для пользователя
+     */
+
     public List<RecommendationDTO> getRecommendations(UUID userId) {
         logger.info("Вызван метод getRecommendations для пользователя с ID: {}", userId);
         List<RecommendationDTO> result = ruleSets.stream()
-                .map(p-> p.recommend(userId))
+                .map(p -> p.recommend(userId))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         logger.debug("Количество найденных рекомендаций для пользователя с ID: {}: {}", userId, result.size());

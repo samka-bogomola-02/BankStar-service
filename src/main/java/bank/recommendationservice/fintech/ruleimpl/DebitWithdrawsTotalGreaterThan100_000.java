@@ -28,6 +28,14 @@ public class DebitWithdrawsTotalGreaterThan100_000 implements Rule {
         this.recommendationsRepository = recommendationsRepository;
     }
 
+    /**
+     * Выполняет проверку правила:
+     * сумма трат по всем продуктам типа DEBIT должно быть больше 100 000
+     *
+     * @param userId id пользователя, для которого выполняется проверка
+     * @return true, если сумма трат по всем продуктам типа DEBIT больше 100 000,
+     * false - в противном случае
+     */
     @Override
     public boolean evaluate(UUID userId) {
         if (userId == null) {

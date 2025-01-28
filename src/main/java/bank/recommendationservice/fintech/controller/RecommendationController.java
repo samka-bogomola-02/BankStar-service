@@ -18,6 +18,11 @@ public class RecommendationController {
         this.recommendationService = recommendationService;
     }
 
+    /**
+     * Получает список рекомендаций для пользователя с заданным ID.
+     * @param userId ID пользователя
+     * @return ответ, содержащий список рекомендаций для пользователя
+     */
     @GetMapping("/{user_id}")
     public ResponseEntity<RecommendationResponse> getRecommendations(@PathVariable("user_id") UUID userId) {
         List<RecommendationDTO> recommendations = recommendationService.getRecommendations(userId);

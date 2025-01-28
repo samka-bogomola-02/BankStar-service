@@ -2,9 +2,9 @@ package bank.recommendationservice.fintech.ruleimpl;
 
 import bank.recommendationservice.fintech.exception.NullArgumentException;
 import bank.recommendationservice.fintech.exception.RepositoryNotInitializedException;
+import bank.recommendationservice.fintech.interfaces.Rule;
 import bank.recommendationservice.fintech.other.ProductType;
 import bank.recommendationservice.fintech.repository.RecommendationsRepository;
-import bank.recommendationservice.fintech.interfaces.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -30,6 +30,12 @@ public class DebitDepositsTotalGreaterThanWithdraws implements Rule {
         this.recommendationsRepository = recommendationsRepository;
     }
 
+    /**
+     * Оценка правил:
+     * - userId != null;
+     * - сумма пополнений по всем продуктам типа DEBIT больше,
+     * чем сумма трат по всем продуктам типа DEBIT.
+     */
     @Override
     public boolean evaluate(UUID userId) {
         if (userId == null) {
