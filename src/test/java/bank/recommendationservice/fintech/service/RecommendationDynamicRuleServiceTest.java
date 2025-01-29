@@ -4,7 +4,6 @@ import bank.recommendationservice.fintech.exception.RulesNotFoundException;
 import bank.recommendationservice.fintech.interfaces.DynamicRuleRepository;
 import bank.recommendationservice.fintech.model.DynamicRule;
 import bank.recommendationservice.fintech.model.DynamicRuleQuery;
-import bank.recommendationservice.fintech.model.DynamicRuleQueryArgument;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -92,16 +91,16 @@ public class RecommendationDynamicRuleServiceTest {
      * 2. Проверяем, что правило было сохранено.
      * 3. Проверяем, что правило было возвращено.
      * 4. Проверяем, что связь запроса с правилом была установлена.
-     * 5. Проверяем, что связь аргумента с запросом была установлена.
-     * 6. Проверяем, что связь аргумента с правилом была установлена.
+     * 5. Проверяем, что связь аргументов с запросом была установлена.
      */
     @Test
     public void testAddRule_QueriesWithArguments() {
         // data
         List<DynamicRuleQuery> queries = new ArrayList<>();
         DynamicRuleQuery query = new DynamicRuleQuery();
-        List<DynamicRuleQueryArgument> arguments = new ArrayList<>();
-        DynamicRuleQueryArgument argument = new DynamicRuleQueryArgument();
+        List<String> arguments = new ArrayList<>();
+        String argument = "argument";
+
         arguments.add(argument);
         query.setArguments(arguments);
         queries.add(query);
@@ -113,10 +112,10 @@ public class RecommendationDynamicRuleServiceTest {
         assertEquals(dynamicRule, result);
         verify(dynamicRuleRepository, times(1)).save(dynamicRule);
         assertEquals(dynamicRule, query.getDynamicRule());
-        assertEquals(query, argument.getDynamicRuleQuery());
         assertNotNull(result.getQueries());
         assertNotNull(result.getQueries().get(0).getArguments());
-        assertNotNull(result.getQueries().get(0).getArguments().get(0).getDynamicRuleQuery());
+        assertEquals(result.getQueries().get(0).getArguments(), arguments);
+
     }
 
     /**

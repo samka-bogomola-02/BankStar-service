@@ -80,25 +80,20 @@ databaseChangeLog:
 
   - changeSet:
       id: 5
-      author: bogomolova
+      author: dineka
       changes:
-        - createSequence:
-            sequenceName: dynamic_rule_argument_seq
-            startValue: 1
-            incrementBy: 1
-
         - createTable:
-            tableName: dynamic_rule_argument
+            tableName: query_arguments
             columns:
               - column:
                   name: id
-                  type: bigint
+                  type: bigserial
                   constraints:
                     primaryKey: true
                     nullable: false
                     autoIncrement: true
               - column:
-                  name: argument_text
+                  name: arguments
                   type: text
                   constraints:
                     nullable: false
@@ -107,3 +102,10 @@ databaseChangeLog:
                   type: bigint
                   constraints:
                     nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: query_arguments
+            baseColumnNames: dynamic_rule_query_id
+            referencedTableName: dynamic_rule_query
+            referencedColumnNames: id
+            constraintName: fk_query_arguments_dynamic_rule_query
