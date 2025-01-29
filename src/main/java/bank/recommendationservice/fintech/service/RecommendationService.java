@@ -2,7 +2,15 @@ package bank.recommendationservice.fintech.service;
 
 
 import bank.recommendationservice.fintech.dto.RecommendationDTO;
+import bank.recommendationservice.fintech.exception.NullArgumentException;
+import bank.recommendationservice.fintech.exception.UnknownQueryTypeException;
 import bank.recommendationservice.fintech.interfaces.RecommendationRuleSet;
+import bank.recommendationservice.fintech.model.DynamicRule;
+import bank.recommendationservice.fintech.model.DynamicRuleQuery;
+import bank.recommendationservice.fintech.other.ProductType;
+import bank.recommendationservice.fintech.other.QueryType;
+import bank.recommendationservice.fintech.repository.DynamicRuleRepository;
+import bank.recommendationservice.fintech.repository.RecommendationsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +25,12 @@ import java.util.stream.Collectors;
 public class RecommendationService {
     @Autowired
     private List<RecommendationRuleSet> ruleSets;
+
+    @Autowired
+    DynamicRuleRepository dynamicRuleRepository;
+
+    @Autowired
+    RecommendationsRepository recommendationsRepository;
     private static final Logger logger = LoggerFactory.getLogger(RecommendationService.class);
 
     /**
@@ -28,6 +42,7 @@ public class RecommendationService {
 
     public List<RecommendationDTO> getRecommendations(UUID userId) {
         logger.info("Вызван метод getRecommendations для пользователя с ID: {}", userId);
+        List<DynamicRule> dynamicRules = dynamicRuleRepository.findAll();
         List<RecommendationDTO> result = ruleSets.stream()
                 .map(p -> p.recommend(userId))
                 .filter(Objects::nonNull)
@@ -35,4 +50,49 @@ public class RecommendationService {
         logger.debug("Количество найденных рекомендаций для пользователя с ID: {}: {}", userId, result.size());
         return result;
     }
-}
+
+    public boolean evaluateDynamicRules(DynamicRule rule, UUID userId) {
+        if (rule == null) {
+            logger.warn("Динамическое правило null");
+            throw new NullArgumentException("Динамическое правило не может быть null");
+        }
+        List<DynamicRuleQuery> queries = rule.getQueries();
+        if (queries.isEmpty()) {
+            logger.debug("Список запросов для динамического правила {} пустой", rule);
+            return false;
+        }
+        for (DynamicRuleQuery query : queries) {
+            try {
+                QueryType queryType = QueryType.fromString(query.getQuery());
+                List<String> queryArguments = query.getArguments();
+                return switch (queryType) {
+                    case USER_OF -> processUserOfQuery(userId, queryArguments.get(0));
+                    case ACTIVE_USER_OF -> processActiveUserOfQuery(queryArguments.get(0)., userId);
+                    case TRANSACTION_SUM_COMPARE -> processTransactionSumCompare();
+                    case TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW -> processTransactionSumCompareDepositWithdraw();
+                };
+
+            } catch (UnknownQueryTypeException e) {
+                logger.warn("Неизвестный тип запроса query: {}", query.getQuery());
+                return false;
+            }
+        }
+        return false;
+    }
+
+    private boolean processUserOfQuery(UUID userId, String productType) {
+        return recommendationsRepository.usesProductOfType(userId, productType);
+    }
+
+    private boolean processActiveUserOfQuery(String productType, UUID userId) {
+        return recommendationsRepository.isActiveUserOfProduct(productType.toString(), userId);
+    }
+
+    private boolean processTransactionSumCompare() {
+        return false;
+    }
+
+    private boolean processTransactionSumCompareDepositWithdraw() {
+        return false;
+    }
+    }
