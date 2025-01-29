@@ -1,4 +1,4 @@
-package bank.recommendationservice.fintech.interfaces;
+package bank.recommendationservice.fintech.repository;
 
 import bank.recommendationservice.fintech.model.DynamicRule;
 import org.springframework.data.jpa.repository.JpaRepository;
