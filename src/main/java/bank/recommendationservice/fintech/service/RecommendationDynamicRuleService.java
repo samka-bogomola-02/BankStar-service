@@ -45,9 +45,6 @@ public class RecommendationDynamicRuleService {
 
         if (rule.getQueries() != null) {
             rule.getQueries().forEach(query -> {
-                if (query.getArguments() != null) {
-                    query.getArguments().forEach(argument -> argument.setDynamicRuleQuery(query));
-                }
                 query.setDynamicRule(rule);
             });
         }

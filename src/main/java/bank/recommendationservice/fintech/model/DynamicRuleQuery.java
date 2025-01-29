@@ -25,9 +25,10 @@ public class DynamicRuleQuery {
     @Column(name = "query", nullable = false)
     private String query;
 
-    @OneToMany(mappedBy = "dynamicRuleQuery", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonProperty("arguments")
-    private List<DynamicRuleQueryArgument> arguments = new ArrayList<>();
+
+    @ElementCollection
+    @CollectionTable(name = "query_arguments", joinColumns = @JoinColumn(name = "dynamic_rule_query_id"))
+    private List<String> arguments;
 
     @Column(name = "negate", nullable = false)
     private boolean negate;
@@ -61,13 +62,5 @@ public class DynamicRuleQuery {
                 ", arguments=" + arguments +
                 ", negate=" + negate +
                 '}';
-    }
-    public void addArgument(DynamicRuleQueryArgument argument) {
-        arguments.add(argument);
-        argument.setDynamicRuleQuery(this); // Устанавливаем связь с текущим правилом
-    }
-    public void removeQuery(DynamicRuleQueryArgument argument) {
-        arguments.remove(argument);
-        argument.setDynamicRuleQuery(null); // Убираем связь с текущим правилом
     }
 }
