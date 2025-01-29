@@ -131,16 +131,16 @@ public class RecommendationsRepository {
             throw new NullArgumentException("userId не должен быть null");
         }
 
+        String query = "SELECT COUNT(*) FROM transactions WHERE product_type = ? AND user_id = ?";
+
+        Object[] params = new Object[]{productType.name(), userId};
+        
         String cacheKey = "count_" + userId + "_" + productType.name();
-        return transactionCountCache.get(cacheKey, key -> {
-            Integer count = jdbcTemplate.queryForObject(
-                    "SELECT COUNT(*) FROM transactions WHERE product_type = ? AND user_id = ?",
-                    Integer.class,
-                    productType.name(),
-                    userId
-            );
-            return count != null ? count : 0;
-        }) >= 5;
+        Integer count = transactionCountCache.get(cacheKey, key -> 
+            jdbcTemplate.queryForObject(query, Integer.class, params)
+        );
+
+        return count != null && count >= 5;
     }
 
 
