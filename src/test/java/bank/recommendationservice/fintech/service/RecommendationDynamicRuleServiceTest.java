@@ -1,6 +1,7 @@
 package bank.recommendationservice.fintech.service;
 
 import bank.recommendationservice.fintech.exception.RulesNotFoundException;
+import bank.recommendationservice.fintech.interfaces.DynamicRuleQueryRepository;
 import bank.recommendationservice.fintech.interfaces.DynamicRuleRepository;
 import bank.recommendationservice.fintech.model.DynamicRule;
 import bank.recommendationservice.fintech.model.DynamicRuleQuery;
@@ -12,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +24,8 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RecommendationDynamicRuleServiceTest {
+    @Mock
+    private DynamicRuleQueryRepository dynamicRuleQueryRepository;
     @Mock
     private DynamicRuleRepository dynamicRuleRepository;
     @InjectMocks
@@ -194,6 +198,7 @@ public class RecommendationDynamicRuleServiceTest {
         DynamicRule rule = new DynamicRule();
         rule.setId(id);
         when(dynamicRuleRepository.findById(id)).thenReturn(Optional.of(rule));
+        when(dynamicRuleQueryRepository.findByDynamicRuleId(id)).thenReturn(Collections.emptyList());
 
         // check
         DynamicRule result = recommendationDynamicRuleService.deleteDynamicRule(id);
@@ -201,6 +206,7 @@ public class RecommendationDynamicRuleServiceTest {
         // test
         assertEquals(rule, result);
         verify(dynamicRuleRepository, times(1)).delete(rule);
+        verify(dynamicRuleQueryRepository, times(1)).deleteAll(anyList());
     }
 
 

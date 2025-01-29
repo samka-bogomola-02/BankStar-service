@@ -20,10 +20,11 @@ public class RecommendationDynamicRuleService {
     @Autowired
     private final DynamicRuleRepository dynamicRuleRepository;
     @Autowired
-    private DynamicRuleQueryRepository dynamicRuleQueryRepository;
+    private final DynamicRuleQueryRepository dynamicRuleQueryRepository;
 
-    public RecommendationDynamicRuleService(DynamicRuleRepository dynamicRuleRepository) {
+    public RecommendationDynamicRuleService(DynamicRuleRepository dynamicRuleRepository, DynamicRuleQueryRepository dynamicRuleQueryRepository) {
         this.dynamicRuleRepository = dynamicRuleRepository;
+        this.dynamicRuleQueryRepository = dynamicRuleQueryRepository;
     }
 
     Logger logger = LoggerFactory.getLogger(RecommendationDynamicRuleService.class);
