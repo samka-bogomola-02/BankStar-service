@@ -18,13 +18,10 @@ import java.util.List;
 @Slf4j
 public class RecommendationDynamicRuleService {
     @Autowired
-    private final DynamicRuleRepository dynamicRuleRepository;
+    private DynamicRuleRepository dynamicRuleRepository;
     @Autowired
     private DynamicRuleQueryRepository dynamicRuleQueryRepository;
 
-    public RecommendationDynamicRuleService(DynamicRuleRepository dynamicRuleRepository) {
-        this.dynamicRuleRepository = dynamicRuleRepository;
-    }
 
     Logger logger = LoggerFactory.getLogger(RecommendationDynamicRuleService.class);
 

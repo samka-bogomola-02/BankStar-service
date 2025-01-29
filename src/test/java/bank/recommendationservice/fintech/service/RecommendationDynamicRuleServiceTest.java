@@ -1,6 +1,7 @@
 package bank.recommendationservice.fintech.service;
 
 import bank.recommendationservice.fintech.exception.RulesNotFoundException;
+import bank.recommendationservice.fintech.interfaces.DynamicRuleQueryRepository;
 import bank.recommendationservice.fintech.interfaces.DynamicRuleRepository;
 import bank.recommendationservice.fintech.model.DynamicRule;
 import bank.recommendationservice.fintech.model.DynamicRuleQuery;
@@ -12,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +24,8 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RecommendationDynamicRuleServiceTest {
+    @Mock
+    private DynamicRuleQueryRepository dynamicRuleQueryRepository;
     @Mock
     private DynamicRuleRepository dynamicRuleRepository;
     @InjectMocks
@@ -178,14 +182,18 @@ public class RecommendationDynamicRuleServiceTest {
     }
 
 
+
     /**
      * Тест на успешное удаление динамического правила.
+     *
      * <p>
-     * 1. Создаём правило с заданным идентификатором.
-     * 2. Настраиваем репозиторий для возврата этого правила по идентификатору.
-     * 3. Вызываем метод удаления правила.
-     * 4. Проверяем, что возвращенное правило совпадает с ожидаемым.
-     * 5. Проверяем, что метод удаления репозитория был вызван один раз с правильным правилом.
+     * 1. Создаем правило с уникальным идентификатором.
+     * 2. Настраиваем репозиторий для возврата этого правила при запросе.
+     * 3. Настраиваем репозиторий запросов для возврата пустого списка.
+     * 4. Вызываем метод удаления правила.
+     * 5. Проверяем, что возвращенное правило совпадает с удаленным.
+     * 6. Проверяем, что метод удаления был вызван один раз для правила.
+     * 7. Проверяем, что метод удаления всех связанных запросов был вызван.
      */
     @Test
     public void testDeleteDynamicRule_Success() {
@@ -194,6 +202,7 @@ public class RecommendationDynamicRuleServiceTest {
         DynamicRule rule = new DynamicRule();
         rule.setId(id);
         when(dynamicRuleRepository.findById(id)).thenReturn(Optional.of(rule));
+        when(dynamicRuleQueryRepository.findByDynamicRuleId(id)).thenReturn(Collections.emptyList());
 
         // check
         DynamicRule result = recommendationDynamicRuleService.deleteDynamicRule(id);
@@ -201,6 +210,7 @@ public class RecommendationDynamicRuleServiceTest {
         // test
         assertEquals(rule, result);
         verify(dynamicRuleRepository, times(1)).delete(rule);
+        verify(dynamicRuleQueryRepository, times(1)).deleteAll(anyList());
     }
 
 
