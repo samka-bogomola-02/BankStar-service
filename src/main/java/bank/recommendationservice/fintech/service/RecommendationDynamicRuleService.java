@@ -1,8 +1,8 @@
 package bank.recommendationservice.fintech.service;
 
 import bank.recommendationservice.fintech.exception.RulesNotFoundException;
-import bank.recommendationservice.fintech.interfaces.DynamicRuleQueryRepository;
-import bank.recommendationservice.fintech.interfaces.DynamicRuleRepository;
+import bank.recommendationservice.fintech.repository.DynamicRuleQueryRepository;
+import bank.recommendationservice.fintech.repository.DynamicRuleRepository;
 import bank.recommendationservice.fintech.model.DynamicRule;
 import bank.recommendationservice.fintech.model.DynamicRuleQuery;
 import lombok.extern.slf4j.Slf4j;
