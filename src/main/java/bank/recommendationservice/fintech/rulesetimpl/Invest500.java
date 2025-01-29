@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -43,6 +42,15 @@ public class Invest500 implements RecommendationRuleSet {
         this.savingDepositsTotalGreaterThan1_000 = savingDepositsTotalGreaterThan1000;
     }
 
+    /**
+     * Оценивает, является ли пользователь с данным ID подходит под критерии рекомендации и если
+     * да, то возвращает {@link RecommendationDTO} с деталями рекомендации.
+     *
+     * @param userId ID пользователя, которого нужно оценить
+     * @return {@link RecommendationDTO} с деталями рекомендации, если пользователь подходит
+     * под критерии, иначе null
+     * @throws NullArgumentException если переданный userId является null
+     */
     @Override
     public RecommendationDTO recommend(UUID userId) {
         logger.info("Вызван метод evaluate() из рулсета Invest500");

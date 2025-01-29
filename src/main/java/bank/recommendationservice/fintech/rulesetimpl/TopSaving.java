@@ -42,6 +42,17 @@ public class TopSaving implements RecommendationRuleSet {
         this.debitDepositsTotalGreaterThanWithdraws = debitDepositsTotalGreaterThanWithdraws;
     }
 
+    /**
+     * Оценивает, является ли пользователь с данным ID подходит под критерии рекомендации "Top Saving".
+     * Если пользователь имеет как минимум один продукт с типом DEBIT, сумму депозитов по продуктам DEBIT
+     * или SAVING >= 50 000, и сумму депозитов по продуктам DEBIT > сумму трат по продуктам DEBIT,
+     * то возвращает {@link RecommendationDTO} с деталями рекомендации.
+     * @param userId ID пользователя, которого нужно оценить
+     * @return {@link RecommendationDTO} с деталями рекомендации, если пользователь подходит
+     * под критерии, null - в противном случае
+     * @throws NullArgumentException если переданный userId является null
+     */
+
     @Override
     public RecommendationDTO recommend(UUID userId) {
         logger.info("Вызван метод evaluate() из рулсета TopSaving");
