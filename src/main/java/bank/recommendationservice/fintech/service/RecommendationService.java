@@ -7,8 +7,10 @@ import bank.recommendationservice.fintech.exception.UnknownQueryTypeException;
 import bank.recommendationservice.fintech.interfaces.RecommendationRuleSet;
 import bank.recommendationservice.fintech.model.DynamicRule;
 import bank.recommendationservice.fintech.model.DynamicRuleQuery;
+import bank.recommendationservice.fintech.other.ComparisonType;
 import bank.recommendationservice.fintech.other.ProductType;
 import bank.recommendationservice.fintech.other.QueryType;
+import bank.recommendationservice.fintech.other.TransactionType;
 import bank.recommendationservice.fintech.repository.DynamicRuleRepository;
 import bank.recommendationservice.fintech.repository.RecommendationsRepository;
 import org.slf4j.Logger;
@@ -51,6 +53,15 @@ public class RecommendationService {
         return result;
     }
 
+
+    /**
+     * Оценивает динамические правила для заданного пользователя.
+     *
+     * @param rule  - динамическое правило для оценки
+     * @param userId - идентификатор пользователя
+     * @return true, если правило оценивается как true, false в противном случае
+     * @throws NullArgumentException если rule - null
+     */
     public boolean evaluateDynamicRules(DynamicRule rule, UUID userId) {
         if (rule == null) {
             logger.warn("Динамическое правило null");
@@ -67,9 +78,13 @@ public class RecommendationService {
                 List<String> queryArguments = query.getArguments();
                 return switch (queryType) {
                     case USER_OF -> processUserOfQuery(userId, queryArguments.get(0));
-                    case ACTIVE_USER_OF -> processActiveUserOfQuery(queryArguments.get(0)., userId);
-                    case TRANSACTION_SUM_COMPARE -> processTransactionSumCompare();
-                    case TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW -> processTransactionSumCompareDepositWithdraw();
+                    case ACTIVE_USER_OF -> processActiveUserOfQuery(ProductType.valueOf(queryArguments.get(0)), userId);
+                    case TRANSACTION_SUM_COMPARE -> processTransactionSumCompare(ProductType.valueOf(queryArguments.get(0)),
+                            TransactionType.valueOf(queryArguments.get(1)), userId, ComparisonType.valueOf(queryArguments.get(2)), Integer.parseInt(queryArguments.get(3)));
+
+                    case TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW -> processTransactionSumCompareDepositWithdraw(ProductType.valueOf(queryArguments.get(0)),
+                            userId, ComparisonType.valueOf(queryArguments.get(1)));
+
                 };
 
             } catch (UnknownQueryTypeException e) {
@@ -84,15 +99,16 @@ public class RecommendationService {
         return recommendationsRepository.usesProductOfType(userId, productType);
     }
 
-    private boolean processActiveUserOfQuery(String productType, UUID userId) {
-        return recommendationsRepository.isActiveUserOfProduct(productType.toString(), userId);
+    private boolean processActiveUserOfQuery(ProductType productType, UUID userId) {
+        return recommendationsRepository.isActiveUserOfProduct(productType, userId);
     }
 
-    private boolean processTransactionSumCompare() {
-        return false;
+    private boolean processTransactionSumCompare(ProductType productType, TransactionType transactionType,
+                                                 UUID userId, ComparisonType comparisonType, int constant) {
+        return recommendationsRepository.compareTransactionSum(productType, transactionType, userId, comparisonType, constant);
     }
 
-    private boolean processTransactionSumCompareDepositWithdraw() {
-        return false;
+    private boolean processTransactionSumCompareDepositWithdraw(ProductType productType, UUID userId, ComparisonType comparisonType) {
+        return recommendationsRepository.compareDepositWithdrawSum(productType, userId, comparisonType);
     }
     }
