@@ -37,6 +37,7 @@ public class DynamicRule {
     @JoinColumn(name = "dynamic_rule_id")
     @JsonProperty("rule")
     private List<DynamicRuleQuery> queries;
+
     public DynamicRule(String productName, UUID productId, String productText, List<DynamicRuleQuery> queries) {
         this.productName = productName;
         this.productId = productId;
@@ -67,13 +68,32 @@ public class DynamicRule {
                 ", queries=" + queries +
                 '}';
     }
+
+
+    /**
+     * Добавляет запрос к этому правилу.
+     *
+     * <p>
+     * Метод добавляет запрос к правилу и устанавливает динамическое правило запроса в это правило.
+     *
+     * @param query запрос, который добавляется
+     */
     public void addQuery(DynamicRuleQuery query) {
         queries.add(query);
-        query.setDynamicRule(this); // Устанавливаем связь с текущим правилом
+        query.setDynamicRule(this);
     }
 
+
+    /**
+     * Удаляет запрос из списка запросов этого правила.
+     *
+     * <p>
+     * Метод удаляет запрос из списка запросов этого правила и убирает связь между запросом и этим правилом.
+     *
+     * @param query запрос, который удаляется
+     */
     public void removeQuery(DynamicRuleQuery query) {
         queries.remove(query);
-        query.setDynamicRule(null); // Убираем связь с текущим правилом
+        query.setDynamicRule(null);
     }
 }

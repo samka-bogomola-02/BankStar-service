@@ -4,6 +4,7 @@ import bank.recommendationservice.fintech.exception.NullArgumentException;
 import bank.recommendationservice.fintech.other.ComparisonType;
 import bank.recommendationservice.fintech.other.ProductType;
 import bank.recommendationservice.fintech.other.TransactionType;
+import com.github.benmanes.caffeine.cache.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,9 +17,20 @@ import java.util.UUID;
 public class RecommendationsRepository {
     private static final Logger logger = LoggerFactory.getLogger(RecommendationsRepository.class);
     private final JdbcTemplate jdbcTemplate;
+    private final Cache<String, Boolean> productTypeCache;
+    private final Cache<String, Integer> transactionSumCache;
+    private final Cache<String, Integer> transactionCountCache;
 
-    public RecommendationsRepository(@Qualifier("recommendationsJdbcTemplate") JdbcTemplate jdbcTemplate) {
+    public RecommendationsRepository(
+            @Qualifier("recommendationsJdbcTemplate") JdbcTemplate jdbcTemplate,
+            Cache<String, Boolean> productTypeCache,
+            Cache<String, Integer> transactionSumCache,
+            Cache<String, Integer> transactionCountCache
+    ) {
         this.jdbcTemplate = jdbcTemplate;
+        this.productTypeCache = productTypeCache;
+        this.transactionSumCache = transactionSumCache;
+        this.transactionCountCache = transactionCountCache;
     }
 
     /**
@@ -37,13 +49,16 @@ public class RecommendationsRepository {
             throw new NullArgumentException("productType не должен быть null");
         }
 
-        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(t.amount) " +
-                        "FROM transactions t JOIN products p ON t.PRODUCT_ID = p.ID WHERE t.USER_ID = ? AND p.TYPE = ?",
-                Integer.class,
-                userId,
-                productType);
-
-        return count != null && count > 0;
+        String cacheKey = "product_" + userId + "_" + productType;
+        return productTypeCache.get(cacheKey, key -> {
+            Integer count = jdbcTemplate.queryForObject(
+                    "SELECT COUNT(t.amount) FROM transactions t JOIN products p ON t.PRODUCT_ID = p.ID WHERE t.USER_ID = ? AND p.TYPE = ?",
+                    Integer.class,
+                    userId,
+                    productType
+            );
+            return count != null && count > 0;
+        });
     }
 
     /**
@@ -62,14 +77,17 @@ public class RecommendationsRepository {
             throw new NullArgumentException("productType не должен быть null");
         }
 
-        Integer total = jdbcTemplate.queryForObject("SELECT SUM(t.amount) " +
-                        "FROM transactions t JOIN products p ON t.product_id = p.id " +
-                        "WHERE t.user_id = ? AND p.type = ? AND t.type = 'DEPOSIT';",
-                Integer.class,
-                userId,
-                productType);
+        String cacheKey = "deposit_" + userId + "_" + productType;
+        return transactionSumCache.get(cacheKey, key -> {
+            Integer total = jdbcTemplate.queryForObject("SELECT SUM(t.amount) " +
+                            "FROM transactions t JOIN products p ON t.product_id = p.id " +
+                            "WHERE t.user_id = ? AND p.type = ? AND t.type = 'DEPOSIT';",
+                    Integer.class,
+                    userId,
+                    productType);
 
-        return total != null ? total : 0;
+            return total != null ? total.intValue() : 0;
+        });
     }
 
     /**
@@ -105,16 +123,26 @@ public class RecommendationsRepository {
      * @param userId      - id пользователя
      * @return {@code true}, если пользователь активно использует продукт; {@code false} - иначе
      */
-
     public boolean isActiveUserOfProduct(ProductType productType, UUID userId) {
+        if (productType == null) {
+            throw new NullArgumentException("productType не должен быть null");
+        }
+        if (userId == null) {
+            throw new NullArgumentException("userId не должен быть null");
+        }
+
         String query = "SELECT COUNT(*) FROM transactions WHERE product_type = ? AND user_id = ?";
 
         Object[] params = new Object[]{productType.name(), userId};
-
-        Integer count = jdbcTemplate.queryForObject(query, Integer.class, productType.name(), userId);
+        
+        String cacheKey = "count_" + userId + "_" + productType.name();
+        Integer count = transactionCountCache.get(cacheKey, key -> 
+            jdbcTemplate.queryForObject(query, Integer.class, params)
+        );
 
         return count != null && count >= 5;
     }
+
 
     /**
      * Сравнивает сумму транзакций по продукту с заданной константой на основе типа сравнения.
@@ -127,13 +155,12 @@ public class RecommendationsRepository {
      * @return {@code true} если сумма транзакций соответствует условию сравнения с константой; {@code false} в противном случае
      * @throws IllegalArgumentException если передан недопустимый тип сравнения
      */
-
     public boolean compareTransactionSum(ProductType productType, TransactionType transactionType, UUID userId, ComparisonType comparisonType, int constant) {
         String query = "SELECT SUM(amount) FROM transactions WHERE product_type = ? AND transaction_type = ? AND user_id = ?";
         Object[] params = new Object[]{productType.name(), transactionType.name(), userId};
         Integer sum = jdbcTemplate.queryForObject(query, Integer.class, params);
         if (sum == null) {
-            return false; // или бросить исключение
+            return false;
         }
         return switch (comparisonType) {
             case GREATER_THAN -> sum > constant;
@@ -160,7 +187,7 @@ public class RecommendationsRepository {
         Integer depositSum = jdbcTemplate.queryForObject(depositQuery, Integer.class, params);
         Integer withdrawSum = jdbcTemplate.queryForObject(withdrawQuery, Integer.class, params);
         if (depositSum == null || withdrawSum == null) {
-            return false; // или бросить исключение, в зависимости от требований
+            return false;
         }
         return switch (comparisonType) {
             case GREATER_THAN -> depositSum > withdrawSum;
@@ -172,4 +199,3 @@ public class RecommendationsRepository {
         };
     }
 }
-
