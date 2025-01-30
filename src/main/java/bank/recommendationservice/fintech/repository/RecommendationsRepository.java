@@ -155,7 +155,6 @@ public class RecommendationsRepository {
      * @return {@code true} если сумма транзакций соответствует условию сравнения с константой; {@code false} в противном случае
      * @throws IllegalArgumentException если передан недопустимый тип сравнения
      */
-
     public boolean compareTransactionSum(ProductType productType, TransactionType transactionType, UUID userId, ComparisonType comparisonType, int constant) {
         String query = "SELECT SUM(amount) FROM transactions WHERE product_type = ? AND transaction_type = ? AND user_id = ?";
         Object[] params = new Object[]{productType.name(), transactionType.name(), userId};
