@@ -43,10 +43,10 @@ public class RecommendationsRepository {
     public boolean usesProductOfType(UUID userId, String productType) {
         logger.info("Вызван метод usesProductOfType() с параметрами userId={}, productType={}", userId, productType);
         if (userId == null) {
-            throw new NullArgumentException("userId не должен быть null");
+            throw new NullArgumentException("userId не должен быть пустым");
         }
         if (productType == null) {
-            throw new NullArgumentException("productType не должен быть null");
+            throw new NullArgumentException("productType не должен быть пустым");
         }
 
         String cacheKey = "product_" + userId + "_" + productType;
@@ -71,10 +71,10 @@ public class RecommendationsRepository {
     public int getDepositsOfTypeTotal(UUID userId, String productType) {
         logger.info("Вызван метод getDepositsOfTypeTotal() с параметрами userId={}, productType={}", userId, productType);
         if (userId == null) {
-            throw new NullArgumentException("userId не должен быть null");
+            throw new NullArgumentException("userId не должен быть пустым");
         }
         if (productType == null) {
-            throw new NullArgumentException("productType не должен быть null");
+            throw new NullArgumentException("productType не должен быть пустым");
         }
 
         String cacheKey = "deposit_" + userId + "_" + productType;
@@ -100,10 +100,10 @@ public class RecommendationsRepository {
     public int getWithdrawsOfTypeTotal(UUID userId, String productType) {
         logger.info("Вызван метод getWithdrawsOfTypeTotal() с параметрами userId={}, productType={}", userId, productType);
         if (userId == null) {
-            throw new NullArgumentException("userId не должен быть null");
+            throw new NullArgumentException("userId не должен быть пустым");
         }
         if (productType == null) {
-            throw new NullArgumentException("productType не должен быть null");
+            throw new NullArgumentException("productType не должен быть пустым");
         }
         Integer total = jdbcTemplate.queryForObject("SELECT SUM(t.amount) " +
                         "FROM transactions t JOIN products p ON t.PRODUCT_ID = p.id " +
@@ -125,19 +125,19 @@ public class RecommendationsRepository {
      */
     public boolean isActiveUserOfProduct(ProductType productType, UUID userId) {
         if (productType == null) {
-            throw new NullArgumentException("productType не должен быть null");
+            throw new NullArgumentException("productType не должен быть пустым");
         }
         if (userId == null) {
-            throw new NullArgumentException("userId не должен быть null");
+            throw new NullArgumentException("userId не должен быть пустым");
         }
 
         String query = "SELECT COUNT(*) FROM transactions WHERE product_type = ? AND user_id = ?";
 
         Object[] params = new Object[]{productType.name(), userId};
-        
+
         String cacheKey = "count_" + userId + "_" + productType.name();
-        Integer count = transactionCountCache.get(cacheKey, key -> 
-            jdbcTemplate.queryForObject(query, Integer.class, params)
+        Integer count = transactionCountCache.get(cacheKey, key ->
+                jdbcTemplate.queryForObject(query, Integer.class, params)
         );
 
         return count != null && count >= 5;

@@ -1,6 +1,6 @@
 package bank.recommendationservice.fintech.other;
 
-import bank.recommendationservice.fintech.exception.UnknownComprasionTypeException;
+import bank.recommendationservice.fintech.exception.UnknownCompressionTypeException;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -25,18 +25,13 @@ public enum ComparisonType {
 
     }
 
-    public static boolean isValidComparison(String comparisonType) {
-        return Arrays.stream(ComparisonType.values())
-                .anyMatch(c -> c.getComparisonType().equals(comparisonType));
-    }
-
     public static ComparisonType fromString(String comparisonType) {
         for (ComparisonType type : ComparisonType.values()) {
             if (type.getComparisonType().equals(comparisonType)) {
                 return type;
             }
         }
-        throw new UnknownComprasionTypeException("Неизвестный тип сравнения: " + comparisonType);
+        throw new UnknownCompressionTypeException("Неизвестный тип сравнения: " + comparisonType);
     }
 }
 
