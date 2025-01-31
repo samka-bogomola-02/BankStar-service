@@ -28,6 +28,17 @@ public class SavingDepositsTotalGreaterThan1_000 implements Rule {
         this.recommendationsRepository = recommendationsRepository;
     }
 
+    /**
+     * Оценка правила {@link SavingDepositsTotalGreaterThan1_000}.
+     * <p>
+     * Проверяет, что сумма пополнений продуктов с типом {@link ProductType#SAVING} для
+     * пользователя с идентификатором {@code userId} больше 1000 ₽.
+     *
+     * @param userId идентификатор пользователя
+     * @return {@code true}, если сумма пополнений продуктов с типом {@link ProductType#SAVING}
+     * больше 1000 ₽, {@code false} - иначе
+     * @throws NullArgumentException если {@code userId} - {@code null}
+     */
     @Override
     public boolean evaluate(UUID userId) {
         if (userId == null) {

@@ -1,14 +1,13 @@
 package bank.recommendationservice.fintech.ruleimpl;
 
 import bank.recommendationservice.fintech.exception.RepositoryNotInitializedException;
+import bank.recommendationservice.fintech.interfaces.Rule;
 import bank.recommendationservice.fintech.other.ProductType;
 import bank.recommendationservice.fintech.repository.RecommendationsRepository;
-import bank.recommendationservice.fintech.interfaces.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.Null;
 import java.util.UUID;
 
 @Component
@@ -25,6 +24,16 @@ public class DebitOrSavingDepositsTotalGreaterThanOrEqualsTo50_000 implements Ru
         this.recommendationsRepository = recommendationsRepository;
     }
 
+    /**
+     * Оценка соответствия пользовательского профиля правилу:
+     * <p>
+     * Пользователь имеет сумму депозитов по продуктам DEBIT >= 50000
+     * или имеет сумму депозитов по продуктам SAVING >= 50000.
+     *
+     * @param userId Идентификатор пользователя
+     * @return true, если правило выполняется, false - в противном случае
+     * @throws NullPointerException если userId равен null
+     */
     @Override
     public boolean evaluate(UUID userId) {
         if (userId == null) {

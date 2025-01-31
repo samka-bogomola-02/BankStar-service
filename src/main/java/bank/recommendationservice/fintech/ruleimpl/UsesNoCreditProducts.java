@@ -2,9 +2,9 @@ package bank.recommendationservice.fintech.ruleimpl;
 
 import bank.recommendationservice.fintech.exception.NullArgumentException;
 import bank.recommendationservice.fintech.exception.RepositoryNotInitializedException;
+import bank.recommendationservice.fintech.interfaces.Rule;
 import bank.recommendationservice.fintech.other.ProductType;
 import bank.recommendationservice.fintech.repository.RecommendationsRepository;
-import bank.recommendationservice.fintech.interfaces.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -27,6 +27,16 @@ public class UsesNoCreditProducts implements Rule {
         }
         this.recommendationsRepository = recommendationsRepository;
     }
+
+    /**
+     * Оценивает, не использует ли пользователь с указанным userId какие-либо
+     * продукты типа CREDIT.
+     *
+     * @param userId ID пользователя, которого оцениваем
+     * @return {@code true}, если пользователь не использует какие-либо продукты
+     * типа CREDIT; {@code false} - иначе
+     * @throws NullArgumentException если userId является null
+     */
 
     @Override
     public boolean evaluate(UUID userId) {
