@@ -2,7 +2,6 @@ package bank.recommendationservice.fintech.controller;
 
 import bank.recommendationservice.fintech.model.DynamicRule;
 import bank.recommendationservice.fintech.service.RecommendationDynamicRuleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +12,11 @@ import java.util.List;
 @RequestMapping("/rule")
 public class RecommendationDynamicRuleController {
 
-    @Autowired
-    private RecommendationDynamicRuleService recommendationDynamicRuleService;
+    private final RecommendationDynamicRuleService recommendationDynamicRuleService;
+
+    public RecommendationDynamicRuleController(RecommendationDynamicRuleService recommendationDynamicRuleService) {
+        this.recommendationDynamicRuleService = recommendationDynamicRuleService;
+    }
 
     /**
      * Создает новое динамическое правило.

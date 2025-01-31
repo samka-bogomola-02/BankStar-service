@@ -15,7 +15,6 @@ import bank.recommendationservice.fintech.repository.DynamicRuleRepository;
 import bank.recommendationservice.fintech.repository.RecommendationsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,15 +24,20 @@ import java.util.UUID;
 
 @Service
 public class RecommendationService {
-    @Autowired
-    private List<RecommendationRuleSet> ruleSets;
+    private final List<RecommendationRuleSet> ruleSets;
 
-    @Autowired
-    DynamicRuleRepository dynamicRuleRepository;
+    private final DynamicRuleRepository dynamicRuleRepository;
 
-    @Autowired
-    RecommendationsRepository recommendationsRepository;
+    private final RecommendationsRepository recommendationsRepository;
     private static final Logger logger = LoggerFactory.getLogger(RecommendationService.class);
+
+    public RecommendationService(List<RecommendationRuleSet> ruleSets,
+                                 DynamicRuleRepository dynamicRuleRepository,
+                                 RecommendationsRepository recommendationsRepository) {
+        this.ruleSets = ruleSets;
+        this.dynamicRuleRepository = dynamicRuleRepository;
+        this.recommendationsRepository = recommendationsRepository;
+    }
 
 
     /**

@@ -1,29 +1,31 @@
 package bank.recommendationservice.fintech.service;
 
 import bank.recommendationservice.fintech.exception.RulesNotFoundException;
-import bank.recommendationservice.fintech.repository.DynamicRuleQueryRepository;
-import bank.recommendationservice.fintech.repository.DynamicRuleRepository;
 import bank.recommendationservice.fintech.model.DynamicRule;
 import bank.recommendationservice.fintech.model.DynamicRuleQuery;
+import bank.recommendationservice.fintech.repository.DynamicRuleQueryRepository;
+import bank.recommendationservice.fintech.repository.DynamicRuleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
 @Slf4j
 public class RecommendationDynamicRuleService {
-    @Autowired
-    private DynamicRuleRepository dynamicRuleRepository;
-    @Autowired
-    private DynamicRuleQueryRepository dynamicRuleQueryRepository;
-
+    private final DynamicRuleRepository dynamicRuleRepository;
+    private final DynamicRuleQueryRepository dynamicRuleQueryRepository;
 
     Logger logger = LoggerFactory.getLogger(RecommendationDynamicRuleService.class);
+
+    public RecommendationDynamicRuleService(DynamicRuleRepository dynamicRuleRepository, DynamicRuleQueryRepository dynamicRuleQueryRepository) {
+        this.dynamicRuleRepository = dynamicRuleRepository;
+        this.dynamicRuleQueryRepository = dynamicRuleQueryRepository;
+    }
 
 
     /**
@@ -40,7 +42,6 @@ public class RecommendationDynamicRuleService {
      * @throws RulesNotFoundException если правило не может быть сохранено
      */
 
-    @Transactional
     public DynamicRule addRule(DynamicRule rule) {
         logger.info("Добавление нового правила: {}", rule.toString());
 
@@ -84,7 +85,7 @@ public class RecommendationDynamicRuleService {
      */
 
     public List<DynamicRule> getAllDynamicRules() {
-        return dynamicRuleRepository.findAll();
+        return Collections.unmodifiableList(dynamicRuleRepository.findAll());
     }
 }
 
