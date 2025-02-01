@@ -1,7 +1,9 @@
 package bank.recommendationservice.fintech.telegrambot.configuration;
 
+import com.pengrad.telegrambot.TelegramBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
@@ -28,9 +30,9 @@ public class TelegramBotConfiguration {
         }
 
     }
-
-    public String getBotToken() {
-        return botToken;
+    @Bean
+    public TelegramBot telegramBot() {
+        return new TelegramBot(botToken);
     }
 
 }
