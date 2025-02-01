@@ -1,6 +1,7 @@
 package bank.recommendationservice.fintech.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,31 +12,40 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ *  Модель динамического правила для генерации рекомендаций
+ */
 @Entity
 @Table(name = "dynamic_rule")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(description = "Модель динамического правила")
 public class DynamicRule {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "dynamic_rule_seq_gen")
     @SequenceGenerator(name = "dynamic_rule_seq_gen", sequenceName = "dynamic_rule_seq", allocationSize = 1)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Schema(description = "Уникальный идентификатор динамического правила", example = "1")
     private Long id;
 
     @Column(name = "product_name", nullable = false)
+    @Schema(description = "Название продукта", example = "Кредитная карта")
     private String productName;
 
     @Column(name = "product_id", nullable = false)
+    @Schema(description = "Уникальный идентификатор продукта", example = "550e8400-e29b-41d4-a716-446655440000")
     private UUID productId;
 
     @Column(name = "product_text", nullable = false)
+    @Schema(description = "Текст продукта", example = "Предлагаем вам кредитную карту с выгодными условиями")
     private String productText;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "dynamic_rule_id")
     @JsonProperty("rule")
+    @Schema(description = "Список запросов для динамического правила")
     private List<DynamicRuleQuery> queries;
 
     public DynamicRule(String productName, UUID productId, String productText, List<DynamicRuleQuery> queries) {
@@ -69,7 +79,6 @@ public class DynamicRule {
                 '}';
     }
 
-
     /**
      * Добавляет запрос к этому правилу.
      *
@@ -82,7 +91,6 @@ public class DynamicRule {
         queries.add(query);
         query.setDynamicRule(this);
     }
-
 
     /**
      * Удаляет запрос из списка запросов этого правила.

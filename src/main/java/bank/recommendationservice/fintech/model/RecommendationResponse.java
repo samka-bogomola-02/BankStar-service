@@ -1,16 +1,24 @@
 package bank.recommendationservice.fintech.model;
 
 import bank.recommendationservice.fintech.dto.RecommendationDTO;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+
 
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+/**
+ *  Модель ответа для получения рекомендаций
+ */
 @Getter
 @Setter
+@Schema(description = "Модель ответа для списка рекомендаций")
 public class RecommendationResponse {
+    @Schema(description = "Уникальный идентификатор пользователя", example = "550e8400-e29b-41d4-a716-446655440000")
     private UUID user_id;
+    @Schema(description = "Список рекомендаций для пользователя")
     private List<RecommendationDTO> recommendations;
 
     public RecommendationResponse(UUID user_id, List<RecommendationDTO> recommendations) {
@@ -39,4 +47,3 @@ public class RecommendationResponse {
                 '}';
     }
 }
-
