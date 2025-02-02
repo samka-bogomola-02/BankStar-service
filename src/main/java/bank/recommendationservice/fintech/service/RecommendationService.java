@@ -29,14 +29,19 @@ public class RecommendationService {
     private final DynamicRuleRepository dynamicRuleRepository;
 
     private final RecommendationsRepository recommendationsRepository;
+
+    private final RuleStatsService ruleStatsService;
+
     private static final Logger logger = LoggerFactory.getLogger(RecommendationService.class);
 
     public RecommendationService(List<RecommendationRuleSet> ruleSets,
                                  DynamicRuleRepository dynamicRuleRepository,
-                                 RecommendationsRepository recommendationsRepository) {
+                                 RecommendationsRepository recommendationsRepository,
+                                 RuleStatsService ruleStatsService) {
         this.ruleSets = ruleSets;
         this.dynamicRuleRepository = dynamicRuleRepository;
         this.recommendationsRepository = recommendationsRepository;
+        this.ruleStatsService = ruleStatsService;
     }
 
 
@@ -58,10 +63,9 @@ public class RecommendationService {
         List<RecommendationDTO> dynamicRecommendations = new ArrayList<>();
 
         for (DynamicRule rule : dynamicRules) {
-
             if (evaluateDynamicRules(rule, userId)) {
-
                 dynamicRecommendations.add(new RecommendationDTO(rule.getProductId(), rule.getProductName(), rule.getProductText()));
+                ruleStatsService.increaseCounter(rule.getId());
             }
         }
 

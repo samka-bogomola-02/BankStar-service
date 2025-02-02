@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,12 +18,16 @@ import java.util.List;
 public class RecommendationDynamicRuleService {
     private final DynamicRuleRepository dynamicRuleRepository;
     private final DynamicRuleQueryRepository dynamicRuleQueryRepository;
+    private final RuleStatsService ruleStatsService;
 
     Logger logger = LoggerFactory.getLogger(RecommendationDynamicRuleService.class);
 
-    public RecommendationDynamicRuleService(DynamicRuleRepository dynamicRuleRepository, DynamicRuleQueryRepository dynamicRuleQueryRepository) {
+    public RecommendationDynamicRuleService(DynamicRuleRepository dynamicRuleRepository,
+                                            DynamicRuleQueryRepository dynamicRuleQueryRepository,
+                                            RuleStatsService ruleStatsService) {
         this.dynamicRuleRepository = dynamicRuleRepository;
         this.dynamicRuleQueryRepository = dynamicRuleQueryRepository;
+        this.ruleStatsService = ruleStatsService;
     }
 
 
@@ -44,13 +47,14 @@ public class RecommendationDynamicRuleService {
 
     public DynamicRule addRule(DynamicRule rule) {
         logger.info("Добавление нового правила: {}", rule.toString());
-
         if (rule.getQueries() != null) {
             rule.getQueries().forEach(query -> {
                 query.setDynamicRule(rule);
             });
         }
-        return dynamicRuleRepository.save(rule);
+        DynamicRule savedRule = dynamicRuleRepository.save(rule);
+        ruleStatsService.addRuleStats(rule.getId());
+        return savedRule;
     }
 
 
