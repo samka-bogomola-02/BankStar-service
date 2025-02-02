@@ -25,9 +25,9 @@ public class RuleStats {
     private Integer count;
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "dynamic_rule_query_id", nullable = false)
+    @JoinColumn(name = "dynamic_rule_id", nullable = false)
     @Schema(description = "Динамическое правило, к которому относится статистика", example = "1")
-    private DynamicRuleQuery dynamicRuleQuery;
+    private DynamicRule dynamicRule;
 
     public RuleStats() {
         this.count = 0; // Инициализация счетчика
@@ -38,12 +38,14 @@ public class RuleStats {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RuleStats ruleStats = (RuleStats) o;
-        return Objects.equals(id, ruleStats.id) && Objects.equals(count, ruleStats.count) && Objects.equals(dynamicRuleQuery, ruleStats.dynamicRuleQuery);
+        return Objects.equals(id, ruleStats.id)
+                && Objects.equals(count, ruleStats.count)
+                && Objects.equals(dynamicRule, ruleStats.dynamicRule);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, count, dynamicRuleQuery);
+        return Objects.hash(id, count, dynamicRule);
     }
 
     @Override
@@ -51,7 +53,7 @@ public class RuleStats {
         return "RuleStats{" +
                 "id=" + id +
                 ", count=" + count +
-                ", dynamicRuleQuery=" + dynamicRuleQuery +
+                ", dynamicRuleQuery=" + dynamicRule +
                 '}';
     }
 }
