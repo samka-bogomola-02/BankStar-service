@@ -186,10 +186,10 @@ IllegalArgumentException.
 
 ## Команда проекта
 
-- [ИМЯ И ФАМИЛИЯ](tg://ссыльгитхаб) — TeamLead
-- [ИМЯ И ФАМИЛИЯ](tg://ссыльгитхаб) — PM
-- [ИМЯ И ФАМИЛИЯ](tg://ссыльгитхаб) — Developer
-- [ИМЯ И ФАМИЛИЯ](tg://ссыльгитхаб) — QA
+- [Irina bogomolova](https://github.com/samka-bogomola-02) — TeamLead
+- [Alina Cheremiskina](https://github.com/linskay) — PM
+- [Vitaly Dineka](https://github.com/Rafnes) — Developer
+- [Ivan Pesterev](https://github.com/gface34rus) — QA
 
 место для счастливой фотки команды
 
