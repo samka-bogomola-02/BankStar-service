@@ -20,12 +20,14 @@ public class RuleStats {
     @JsonIgnore
     @Schema(description = "Уникальный идентификатор статистики", example = "1")
     private Long id;
+
     @Column(name = "count", nullable = false)
     @Schema(description = "Счетчик срабатываний рекомендаций", example = "0")
     private Integer count;
+
     @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "dynamic_rule_id", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "dynamic_rule_id", nullable = false, unique = true)
     @Schema(description = "Динамическое правило, к которому относится статистика", example = "1")
     private DynamicRule dynamicRule;
 
