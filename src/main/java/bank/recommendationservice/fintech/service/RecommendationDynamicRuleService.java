@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +21,7 @@ public class RecommendationDynamicRuleService {
     private final DynamicRuleQueryRepository dynamicRuleQueryRepository;
     private final RuleStatsService ruleStatsService;
 
-    Logger logger = LoggerFactory.getLogger(RecommendationDynamicRuleService.class);
+    final Logger logger = LoggerFactory.getLogger(RecommendationDynamicRuleService.class);
 
     public RecommendationDynamicRuleService(DynamicRuleRepository dynamicRuleRepository,
                                             DynamicRuleQueryRepository dynamicRuleQueryRepository,
@@ -70,7 +71,9 @@ public class RecommendationDynamicRuleService {
      * @return удаленное правило
      * @throws RulesNotFoundException если правило с указанным идентификатором не найдено
      */
+    @Transactional
     public DynamicRule deleteDynamicRule(Long id) {
+        ruleStatsService.deleteRuleStats(id);
         DynamicRule ruleToRemove = dynamicRuleRepository.findById(id)
                 .orElseThrow(() -> new RulesNotFoundException("Правило не найдено!"));
 

@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RuleStatsRepository extends JpaRepository<RuleStats, Long> {
     RuleStats findByDynamicRuleId(Long ruleId);
+
+    void deleteByDynamicRuleId(Long ruleId);
 }
