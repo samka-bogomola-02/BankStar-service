@@ -198,4 +198,10 @@ public class RecommendationsRepository {
             default -> throw new IllegalArgumentException("Unknown comparison type: " + comparisonType);
         };
     }
+
+    public UUID getUserIdByUserName(String userName) {
+        String sql = "SELECT id FROM users WHERE username = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{userName}, UUID.class);
+    }
+
 }

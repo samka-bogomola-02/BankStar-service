@@ -77,6 +77,31 @@ public class RecommendationService {
         return allRecommendations;
     }
 
+    public List<RecommendationDTO> getRecommendations(String userName) {
+        UUID userId = recommendationsRepository.getUserIdByUserName(userName);
+        List<DynamicRule> dynamicRules = dynamicRuleRepository.findAll();
+        List<RecommendationDTO> dynamicRecommendations = new ArrayList<>();
+
+        for (DynamicRule rule : dynamicRules) {
+
+            if (evaluateDynamicRules(rule, userId)) {
+
+                dynamicRecommendations.add(new RecommendationDTO(rule.getProductId(), rule.getProductName(), rule.getProductText()));
+            }
+        }
+
+        List<RecommendationDTO> standardRecommendations = ruleSets.stream()
+                .map(p -> p.recommend(userId))
+                .filter(Objects::nonNull)
+                .toList();
+
+        List<RecommendationDTO> allRecommendations = new ArrayList<>();
+        allRecommendations.addAll(dynamicRecommendations);
+        allRecommendations.addAll(standardRecommendations);
+
+        return allRecommendations;
+    }
+
 
     /**
      * Оценивает динамические правила для заданного пользователя.

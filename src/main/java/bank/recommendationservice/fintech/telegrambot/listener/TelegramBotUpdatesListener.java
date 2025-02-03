@@ -1,5 +1,7 @@
 package bank.recommendationservice.fintech.telegrambot.listener;
 
+import bank.recommendationservice.fintech.dto.RecommendationDTO;
+import bank.recommendationservice.fintech.service.RecommendationService;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Message;
@@ -19,6 +21,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     @Autowired
     TelegramBot telegramBot;
+    @Autowired
+    RecommendationService recommendationService;
 
     @PostConstruct
     public void init() {
@@ -33,15 +37,32 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             if (update.message() != null) {
                 Message message = update.message();
                 String text = message.text();
+                long chatId = message.chat().id();
 
                 if ("/start".equals(text)) {
-                    long chatId = message.chat().id();
-                    String welcomeMessage = "Привет! Я Star Bank Assistant"; // проверка ответа
+                    String welcomeMessage = "Привет! Я Star Bank Assistant. Используйте команду /recommend <имя_пользователя> для получения рекомендаций.";
                     SendMessage sendMessage = new SendMessage(chatId, welcomeMessage);
                     telegramBot.execute(sendMessage);
+                } else if (text.startsWith("/recommend")) {
+                    String[] commandParts = text.split(" ");
+                    if (commandParts.length > 1) {
+                        String username = commandParts[1]; // Получаем имя пользователя из команды
+                        handleRecommendationRequest(chatId, username);
+                    } else {
+                        SendMessage sendMessage = new SendMessage(chatId, "Пожалуйста, укажите имя пользователя после команды /recommend.");
+                        telegramBot.execute(sendMessage);
+                    }
                 }
             }
         });
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
+
+
+    }
+
+    private void handleRecommendationRequest(long chatId, String username) {
+        List<RecommendationDTO> response = recommendationService.getRecommendations(username);
+        SendMessage sendMessage = new SendMessage(chatId, response.toString());
+        telegramBot.execute(sendMessage);
     }
 }
