@@ -1,6 +1,7 @@
 package bank.recommendationservice.fintech.telegrambot.listener;
 
 import bank.recommendationservice.fintech.dto.RecommendationDTO;
+import bank.recommendationservice.fintech.repository.RecommendationsRepository;
 import bank.recommendationservice.fintech.service.RecommendationService;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
@@ -23,6 +24,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     TelegramBot telegramBot;
     @Autowired
     RecommendationService recommendationService;
+    @Autowired
+    RecommendationsRepository recommendationsRepository;
 
     @PostConstruct
     public void init() {
@@ -46,8 +49,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 } else if (text.startsWith("/recommend")) {
                     String[] commandParts = text.split(" ");
                     if (commandParts.length > 1) {
-                        String username = commandParts[1]; // Получаем имя пользователя из команды
-                        handleRecommendationRequest(chatId, username);
+                        handleRecommendationRequest(chatId, commandParts[1]);
                     } else {
                         SendMessage sendMessage = new SendMessage(chatId, "Пожалуйста, укажите имя пользователя после команды /recommend.");
                         telegramBot.execute(sendMessage);
@@ -62,7 +64,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     private void handleRecommendationRequest(long chatId, String username) {
         List<RecommendationDTO> response = recommendationService.getRecommendations(username);
-        SendMessage sendMessage = new SendMessage(chatId, response.toString());
+        String fullUserName = recommendationsRepository.getFullNameByUsername(username);
+        String result = "Рекомендации для " + fullUserName + ":\n";
+        for (RecommendationDTO recommendation : response) {
+            result += recommendation.toString() + "\n";
+        }
+        SendMessage sendMessage = new SendMessage(chatId, result);
         telegramBot.execute(sendMessage);
     }
 }
