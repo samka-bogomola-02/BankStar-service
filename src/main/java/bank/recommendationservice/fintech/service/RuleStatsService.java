@@ -4,6 +4,7 @@ import bank.recommendationservice.fintech.dto.RuleStatsDTO;
 import bank.recommendationservice.fintech.exception.NullArgumentException;
 import bank.recommendationservice.fintech.exception.RulesNotFoundException;
 import bank.recommendationservice.fintech.model.RuleStats;
+import bank.recommendationservice.fintech.model.RuleStatsResponse;
 import bank.recommendationservice.fintech.repository.DynamicRuleRepository;
 import bank.recommendationservice.fintech.repository.RuleStatsRepository;
 import org.slf4j.Logger;
@@ -50,10 +51,11 @@ public class RuleStatsService {
     /**
      * @return {@code List} из DTO всех объектов RuleStats
      */
-    public List<RuleStatsDTO> getAllRuleStats() {
-        return ruleStatsRepository.findAll().stream()
+    public RuleStatsResponse getAllRuleStats() {
+        List<RuleStatsDTO> ruleStatsList = ruleStatsRepository.findAll().stream()
                 .map(ruleStats -> new RuleStatsDTO(ruleStats.getDynamicRule().getId(), ruleStats.getCount()))
                 .toList();
+        return new RuleStatsResponse(ruleStatsList);
     }
 
     /**

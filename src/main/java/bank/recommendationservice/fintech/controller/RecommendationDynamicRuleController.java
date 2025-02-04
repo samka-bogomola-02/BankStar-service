@@ -2,6 +2,7 @@ package bank.recommendationservice.fintech.controller;
 
 import bank.recommendationservice.fintech.dto.RuleStatsDTO;
 import bank.recommendationservice.fintech.model.DynamicRule;
+import bank.recommendationservice.fintech.model.RuleStatsResponse;
 import bank.recommendationservice.fintech.service.RecommendationDynamicRuleService;
 import bank.recommendationservice.fintech.service.RuleStatsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -99,9 +100,9 @@ public class RecommendationDynamicRuleController {
     }
 
     @GetMapping("/stats")
-    public ResponseEntity<List<RuleStatsDTO>> getRuleStats() {
-        List<RuleStatsDTO> stats = ruleStatsService.getAllRuleStats();
-        return ResponseEntity.ok(stats);
+    public ResponseEntity<RuleStatsResponse> getRuleStats() {
+        RuleStatsResponse response = ruleStatsService.getAllRuleStats();
+        return ResponseEntity.ok(response);
     }
 
 }
