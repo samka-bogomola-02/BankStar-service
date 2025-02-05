@@ -4,7 +4,10 @@ import bank.recommendationservice.fintech.model.DynamicRule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface DynamicRuleRepository extends JpaRepository<DynamicRule, Long> {
-    // Сюда добавить каке-то методы поиска, при надобности
+    Optional<DynamicRule> findDynamicRuleById(Long id);
+
 }

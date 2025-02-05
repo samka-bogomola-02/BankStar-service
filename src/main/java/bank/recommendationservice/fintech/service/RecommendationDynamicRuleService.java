@@ -73,10 +73,10 @@ public class RecommendationDynamicRuleService {
      */
     @Transactional
     public DynamicRule deleteDynamicRule(Long id) {
+        logger.info("Удаление правила с id: {}", id);
         ruleStatsService.deleteRuleStats(id);
-        DynamicRule ruleToRemove = dynamicRuleRepository.findById(id)
+        DynamicRule ruleToRemove = dynamicRuleRepository.findDynamicRuleById(id)
                 .orElseThrow(() -> new RulesNotFoundException("Правило не найдено!"));
-
         List<DynamicRuleQuery> queries = dynamicRuleQueryRepository.findByDynamicRuleId(id);
         dynamicRuleQueryRepository.deleteAll(queries);
 
