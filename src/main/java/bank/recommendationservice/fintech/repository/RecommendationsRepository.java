@@ -198,4 +198,18 @@ public class RecommendationsRepository {
             default -> throw new IllegalArgumentException("Unknown comparison type: " + comparisonType);
         };
     }
+
+    public UUID getUserIdByUserName(String userName) {
+        String sql = "SELECT id FROM users WHERE username = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{userName}, UUID.class);
+    }
+
+    public String getFullNameByUsername(String username) {
+        String sql = "SELECT first_name, last_name FROM users WHERE username = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{username}, (rs, rowNum) -> {
+            String firstName = rs.getString("first_name");
+            String lastName = rs.getString("last_name");
+            return firstName + " " + lastName;
+        });
+    }
 }
