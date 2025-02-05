@@ -68,21 +68,21 @@ public class RecommendationDynamicRuleService {
      * <p>
      *
      * @param id идентификатор правила, которое необходимо удалить
-     * @return удаленное правило
+     *
      * @throws RulesNotFoundException если правило с указанным идентификатором не найдено
      */
     @Transactional
-    public DynamicRule deleteDynamicRule(Long id) {
+    public void deleteDynamicRule(Long id) {
         logger.info("Удаление правила с id: {}", id);
+        if (!dynamicRuleRepository.existsById(id)) {
+            logger.error("Правило с id: {} не найдено", id);
+            throw new RulesNotFoundException("Не удалось удалить правило - правило не найдено");
+        }
         ruleStatsService.deleteRuleStats(id);
-        DynamicRule ruleToRemove = dynamicRuleRepository.findDynamicRuleById(id)
-                .orElseThrow(() -> new RulesNotFoundException("Правило не найдено!"));
         List<DynamicRuleQuery> queries = dynamicRuleQueryRepository.findByDynamicRuleId(id);
         dynamicRuleQueryRepository.deleteAll(queries);
 
-        dynamicRuleRepository.delete(ruleToRemove);
-
-        return ruleToRemove;
+        dynamicRuleRepository.deleteById(id);
     }
 
     /**
