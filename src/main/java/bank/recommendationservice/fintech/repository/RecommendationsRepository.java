@@ -131,7 +131,7 @@ public class RecommendationsRepository {
             throw new NullArgumentException("userId не должен быть пустым");
         }
 
-        String query = "SELECT COUNT(*) FROM transactions WHERE product_type = ? AND user_id = ?";
+        String query = "SELECT COUNT(t.amount) FROM transactions t JOIN products p ON t.PRODUCT_ID = p.ID WHERE p.TYPE = ? AND t.USER_ID = ?";
 
         Object[] params = new Object[]{productType.name(), userId};
 
