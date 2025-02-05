@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface DynamicRuleRepository extends JpaRepository<DynamicRule, Long> {
     Optional<DynamicRule> findDynamicRuleById(Long id);
+
 }
