@@ -26,7 +26,7 @@ public class RuleStats {
     private Integer count;
 
     @JsonIgnore
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "dynamic_rule_id", nullable = false, unique = true)
     @Schema(description = "Динамическое правило, к которому относится статистика", example = "1")
     private DynamicRule dynamicRule;
