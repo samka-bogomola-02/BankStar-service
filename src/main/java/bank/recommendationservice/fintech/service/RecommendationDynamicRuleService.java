@@ -19,12 +19,16 @@ import java.util.List;
 public class RecommendationDynamicRuleService {
     private final DynamicRuleRepository dynamicRuleRepository;
     private final DynamicRuleQueryRepository dynamicRuleQueryRepository;
+    private final RuleStatsService ruleStatsService;
 
-    Logger logger = LoggerFactory.getLogger(RecommendationDynamicRuleService.class);
+    final Logger logger = LoggerFactory.getLogger(RecommendationDynamicRuleService.class);
 
-    public RecommendationDynamicRuleService(DynamicRuleRepository dynamicRuleRepository, DynamicRuleQueryRepository dynamicRuleQueryRepository) {
+    public RecommendationDynamicRuleService(DynamicRuleRepository dynamicRuleRepository,
+                                            DynamicRuleQueryRepository dynamicRuleQueryRepository,
+                                            RuleStatsService ruleStatsService) {
         this.dynamicRuleRepository = dynamicRuleRepository;
         this.dynamicRuleQueryRepository = dynamicRuleQueryRepository;
+        this.ruleStatsService = ruleStatsService;
     }
 
 
@@ -44,13 +48,14 @@ public class RecommendationDynamicRuleService {
 
     public DynamicRule addRule(DynamicRule rule) {
         logger.info("Добавление нового правила: {}", rule.toString());
-
         if (rule.getQueries() != null) {
             rule.getQueries().forEach(query -> {
                 query.setDynamicRule(rule);
             });
         }
-        return dynamicRuleRepository.save(rule);
+        DynamicRule savedRule = dynamicRuleRepository.save(rule);
+        ruleStatsService.addRuleStats(rule.getId());
+        return savedRule;
     }
 
 
@@ -67,6 +72,8 @@ public class RecommendationDynamicRuleService {
      * @throws RulesNotFoundException если правило с указанным идентификатором не найдено
      */
     public DynamicRule deleteDynamicRule(Long id) {
+        logger.info("Удаление правила по id: {}", id);
+        ruleStatsService.deleteRuleStats(id);
         DynamicRule ruleToRemove = dynamicRuleRepository.findById(id)
                 .orElseThrow(() -> new RulesNotFoundException("Правило не найдено!"));
 

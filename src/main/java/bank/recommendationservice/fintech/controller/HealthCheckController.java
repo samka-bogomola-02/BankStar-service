@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Контроллер для проверки работоспособности приложения.
+ */
 @RestController
 @Tag(name = "Health Check", description = "Эндпоинты для проверки работоспособности приложения")
 public class HealthCheckController {
@@ -24,7 +27,6 @@ public class HealthCheckController {
 
     @Value("${build.version}")
     private String appVersion;
-
 
     /**
      * Эндпоинт для проверки работоспособности приложения.

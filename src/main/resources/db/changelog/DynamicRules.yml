@@ -109,3 +109,39 @@ databaseChangeLog:
             referencedTableName: dynamic_rule_query
             referencedColumnNames: id
             constraintName: fk_query_arguments_dynamic_rule_query
+
+  - changeSet:
+      id: 6
+      author: bogomolova
+      changes:
+        - createSequence:
+            sequenceName: rule_stats_seq
+            startValue: 1
+            incrementBy: 1
+        - createTable:
+            tableName: rule_stats
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    autoIncrement: true
+              - column:
+                  name: count
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: dynamic_rule_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: rule_stats
+            baseColumnNames: dynamic_rule_id
+            referencedTableName: dynamic_rule
+            referencedColumnNames: id
+            constraintName: fk_rule_stats_dynamic_rule

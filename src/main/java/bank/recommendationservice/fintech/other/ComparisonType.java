@@ -1,9 +1,7 @@
 package bank.recommendationservice.fintech.other;
 
-import bank.recommendationservice.fintech.exception.UnknownCompressionTypeException;
+import bank.recommendationservice.fintech.exception.UnknownComparisonTypeException;
 import lombok.Getter;
-
-import java.util.Arrays;
 
 @Getter
 public enum ComparisonType {
@@ -31,7 +29,7 @@ public enum ComparisonType {
                 return type;
             }
         }
-        throw new UnknownCompressionTypeException("Неизвестный тип сравнения: " + comparisonType);
+        throw new UnknownComparisonTypeException("Неизвестный тип сравнения: " + comparisonType);
     }
 }
 
