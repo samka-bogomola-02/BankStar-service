@@ -61,7 +61,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     if (commandParts.length > 1) {
                         handleRecommendationRequest(chatId, commandParts[1]);
                     } else {
-                        SendMessage sendMessage = new SendMessage(chatId, "Пожалуйста, укажите имя пользователя после команды /recommend.");
+                        SendMessage sendMessage = new SendMessage(chatId, "Пожалуйста, укажите имя пользователя, через пробел, после команды /recommend.");
                         telegramBot.execute(sendMessage);
                     }
                 }
