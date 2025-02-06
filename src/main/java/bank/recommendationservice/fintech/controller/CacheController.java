@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/management")
-@Tag(name = "Сброс кеша", description = "Эндпоинт для сброса кеша")
+@Tag(name = "Сброс кеша", description = "Эндпоинты для сброса кеша")
 public class CacheController {
     private final CacheService cacheService;
 

@@ -21,7 +21,7 @@ public class RecommendationDynamicRuleService {
     private final DynamicRuleQueryRepository dynamicRuleQueryRepository;
     private final RuleStatsService ruleStatsService;
 
-    final Logger logger = LoggerFactory.getLogger(RecommendationDynamicRuleService.class);
+    private static final Logger logger = LoggerFactory.getLogger(RecommendationDynamicRuleService.class);
 
     public RecommendationDynamicRuleService(DynamicRuleRepository dynamicRuleRepository,
                                             DynamicRuleQueryRepository dynamicRuleQueryRepository,
