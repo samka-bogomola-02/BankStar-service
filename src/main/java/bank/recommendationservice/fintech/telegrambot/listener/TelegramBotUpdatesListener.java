@@ -18,7 +18,7 @@ import java.util.List;
 
 @Component
 public class TelegramBotUpdatesListener implements UpdatesListener {
-    private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
+    private static final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
 
     @Autowired
     TelegramBot telegramBot;

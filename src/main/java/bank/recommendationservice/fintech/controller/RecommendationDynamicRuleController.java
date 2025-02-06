@@ -1,6 +1,5 @@
 package bank.recommendationservice.fintech.controller;
 
-import bank.recommendationservice.fintech.dto.RuleStatsDTO;
 import bank.recommendationservice.fintech.model.DynamicRule;
 import bank.recommendationservice.fintech.model.RuleStatsResponse;
 import bank.recommendationservice.fintech.service.RecommendationDynamicRuleService;

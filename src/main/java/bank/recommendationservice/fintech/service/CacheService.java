@@ -11,7 +11,7 @@ public class CacheService {
     private final Cache<String, Integer> transactionSumCache;
     private final Cache<String, Integer> transactionCountCache;
 
-    final Logger logger = LoggerFactory.getLogger(CacheService.class);
+    private static final Logger logger = LoggerFactory.getLogger(CacheService.class);
 
     public CacheService(Cache<String, Boolean> productTypeCache,
                         Cache<String, Integer> transactionSumCache,

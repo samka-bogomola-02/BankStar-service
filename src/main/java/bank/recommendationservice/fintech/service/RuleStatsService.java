@@ -18,7 +18,7 @@ public class RuleStatsService {
     private final RuleStatsRepository ruleStatsRepository;
     private final DynamicRuleRepository dynamicRuleRepository;
 
-    private final Logger logger = LoggerFactory.getLogger(RuleStatsService.class);
+    private static final Logger logger = LoggerFactory.getLogger(RuleStatsService.class);
 
     RuleStatsService(RuleStatsRepository ruleStatsRepository,
                      DynamicRuleRepository dynamicRuleRepository) {

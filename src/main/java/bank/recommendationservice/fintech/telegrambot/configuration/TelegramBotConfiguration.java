@@ -14,9 +14,10 @@ import java.util.Properties;
 public class TelegramBotConfiguration {
     private String botToken;
 
+    private static final Logger logger = LoggerFactory.getLogger(TelegramBotConfiguration.class);
+
     public TelegramBotConfiguration() {
         Properties properties = new Properties();
-        final Logger logger = LoggerFactory.getLogger(TelegramBotConfiguration.class);
         try (InputStream input = getClass().getClassLoader().getResourceAsStream("tg_token.properties")) {
             if (input == null) {
                 logger.error("Не удалось найти файл конфигурации tg_token.properties");
