@@ -32,6 +32,15 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         telegramBot.setUpdatesListener(this);
     }
 
+
+    /**
+     * Обрабатывает список обновлений от Telegram. Если обновление содержит сообщение,
+     * бот проверяет, является ли сообщение командой. Если это так, бот обрабатывает команду.
+     * Если сообщение не является командой, бот игнорирует его.
+     *
+     * @param updates список обновлений для обработки
+     * @return {@link UpdatesListener#CONFIRMED_UPDATES_ALL} для подтверждения обработки всех обновлений
+     */
     @Override
     public int process(List<Update> updates) {
         updates.forEach(update -> {
@@ -43,7 +52,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 long chatId = message.chat().id();
 
                 if ("/start".equals(text)) {
-                    String welcomeMessage = "Привет! Я Star Bank Assistant. Используйте команду /recommend <имя_пользователя> для получения рекомендаций.";
+                    String welcomeMessage = "Привет! Я Star Bank Assistant. Используйте команду /recommend имя.пользователя  через пробел " +
+                            "для получения рекомендаций.";
                     SendMessage sendMessage = new SendMessage(chatId, welcomeMessage);
                     telegramBot.execute(sendMessage);
                 } else if (text.startsWith("/recommend")) {
@@ -51,7 +61,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     if (commandParts.length > 1) {
                         handleRecommendationRequest(chatId, commandParts[1]);
                     } else {
-                        SendMessage sendMessage = new SendMessage(chatId, "Пожалуйста, укажите имя пользователя после команды /recommend.");
+                        SendMessage sendMessage = new SendMessage(chatId, "Пожалуйста, укажите имя пользователя, через пробел, после команды /recommend.");
                         telegramBot.execute(sendMessage);
                     }
                 }
