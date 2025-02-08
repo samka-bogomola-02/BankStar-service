@@ -1,5 +1,8 @@
 package bank.recommendationservice.fintech.exception;
 
+import lombok.Getter;
+
+@Getter
 public class RulesNotFoundException extends BaseNotFoundException {
 private final Long ruleId;
 
@@ -8,7 +11,4 @@ private final Long ruleId;
         this.ruleId = ruleId;
     }
 
-    public Long getRuleId() {
-        return ruleId;
-    }
 }
