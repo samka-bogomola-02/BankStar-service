@@ -16,6 +16,10 @@ public class InfoController {
         this.buildProperties = buildProperties;
     }
 
+
+    /**
+     * @return строка, содержащая имя и версию приложения
+     */
     @GetMapping("/info")
     public String info() {
         return "name = " + buildProperties.getName() + ", version = " + buildProperties.getVersion();
