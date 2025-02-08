@@ -43,7 +43,7 @@ public class RuleStatsService {
         RuleStats ruleStats = new RuleStats();
         ruleStats.setCount(0);
         ruleStats.setDynamicRule(dynamicRuleRepository.findById(dynamicRuleId).orElseThrow(
-                () -> new RulesNotFoundException("Динамическое правило не найдено")));
+                () -> new RulesNotFoundException("Динамическое правило не найдено ", dynamicRuleId)));
         logger.debug("Добавлен ruleStats для динамического правила с id: {}", dynamicRuleId);
         ruleStatsRepository.save(ruleStats);
     }
@@ -78,8 +78,8 @@ public class RuleStatsService {
             logger.debug("Увеличен счетчик срабатываний для правила с id: {}", dynamicRuleId);
             ruleStatsRepository.save(ruleStats);
         } else {
-            logger.error("Статистика срабатываний по правилу с id: {} не найдена", dynamicRuleId);
-            throw new RulesNotFoundException("Статистика срабатываний по правилу не найдена");
+            logger.error("Статистика срабатываний по правилу с id: {} не найдена ", dynamicRuleId);
+            throw new RulesNotFoundException("Статистика срабатываний по правилу не найдена ", dynamicRuleId);
         }
     }
 

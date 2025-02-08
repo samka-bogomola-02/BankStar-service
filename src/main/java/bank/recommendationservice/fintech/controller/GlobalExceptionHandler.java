@@ -3,6 +3,7 @@ package bank.recommendationservice.fintech.controller;
 import bank.recommendationservice.fintech.exception.BaseBadRequestException;
 import bank.recommendationservice.fintech.exception.BaseNotFoundException;
 import bank.recommendationservice.fintech.exception.RepositoryNotInitializedException;
+import bank.recommendationservice.fintech.exception.RulesNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @ExceptionHandler(RulesNotFoundException.class)
+    public ResponseEntity<String> handleRulesNotFoundException(RulesNotFoundException ex) {
+        String message = String.format("%s (ID: %d)", ex.getMessage(), ex.getRuleId());
+        logger.error(message);
+        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+    }
 
     @ExceptionHandler(BaseNotFoundException.class)
     public ResponseEntity<String> handleNotFoundExceptions(BaseNotFoundException ex) {

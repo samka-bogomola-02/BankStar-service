@@ -76,7 +76,7 @@ public class RecommendationDynamicRuleService {
         logger.info("Удаление правила с id: {}", id);
         if (!dynamicRuleRepository.existsById(id)) {
             logger.error("Правило с id: {} не найдено", id);
-            throw new RulesNotFoundException("Не удалось удалить правило - правило не найдено");
+            throw new RulesNotFoundException("Не удалось удалить правило - правило не найдено ", id);
         }
         ruleStatsService.deleteRuleStats(id);
         List<DynamicRuleQuery> queries = dynamicRuleQueryRepository.findByDynamicRuleId(id);
