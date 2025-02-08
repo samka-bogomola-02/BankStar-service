@@ -20,12 +20,17 @@ import java.util.List;
 public class TelegramBotUpdatesListener implements UpdatesListener {
     private static final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
 
-    @Autowired
-    TelegramBot telegramBot;
-    @Autowired
-    RecommendationService recommendationService;
-    @Autowired
-    RecommendationsRepository recommendationsRepository;
+    private final TelegramBot telegramBot;
+    private final RecommendationService recommendationService;
+    private final RecommendationsRepository recommendationsRepository;
+
+    public TelegramBotUpdatesListener(TelegramBot telegramBot,
+                                      RecommendationService recommendationService,
+                                      RecommendationsRepository recommendationsRepository) {
+        this.telegramBot = telegramBot;
+        this.recommendationService = recommendationService;
+        this.recommendationsRepository = recommendationsRepository;
+    }
 
     @PostConstruct
     public void init() {
@@ -51,25 +56,35 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 String text = message.text();
                 long chatId = message.chat().id();
 
+                if (text == null) {
+                    SendMessage sendMessage = new SendMessage(chatId, "Ошибка: текст команды не может быть пустым.");
+                    telegramBot.execute(sendMessage);
+                    return;
+                }
+
                 if ("/start".equals(text)) {
-                    String welcomeMessage = "Привет! Я Star Bank Assistant. Используйте команду /recommend имя.пользователя  через пробел " +
-                            "для получения рекомендаций.";
+
+                    String welcomeMessage = "Привет! Я Star Bank Assistant. " +
+                            "Используйте команду /recommend <имя_пользователя> для получения рекомендаций.";
+
                     SendMessage sendMessage = new SendMessage(chatId, welcomeMessage);
                     telegramBot.execute(sendMessage);
                 } else if (text.startsWith("/recommend")) {
                     String[] commandParts = text.split(" ");
-                    if (commandParts.length > 1) {
-                        handleRecommendationRequest(chatId, commandParts[1]);
-                    } else {
-                        SendMessage sendMessage = new SendMessage(chatId, "Пожалуйста, укажите имя пользователя, через пробел, после команды /recommend.");
+
+
+                    if (commandParts.length <= 1) {
+                        SendMessage sendMessage = new SendMessage(chatId, "Пожалуйста, " +
+                                "укажите имя пользователя, через пробел, после команды /recommend.");
+
                         telegramBot.execute(sendMessage);
+                        return;
                     }
+                    handleRecommendationRequest(chatId, commandParts[1]);
                 }
             }
         });
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
-
-
     }
 
     private void handleRecommendationRequest(long chatId, String username) {

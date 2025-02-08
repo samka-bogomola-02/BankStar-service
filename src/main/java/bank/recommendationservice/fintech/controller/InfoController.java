@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class InfoController {
     private final BuildProperties buildProperties;
 
-    @Autowired
     public InfoController(BuildProperties buildProperties) {
         this.buildProperties = buildProperties;
     }
