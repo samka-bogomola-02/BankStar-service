@@ -26,12 +26,12 @@ public class DynamicRuleQuery {
     private Long id;
 
     @Column(name = "query", nullable = false)
-    @Schema(description = "Строка запроса", example = "transactions.amount > ?")
+    @Schema(description = "Строка запроса", example = "USER_OF")
     private String query;
 
     @ElementCollection
     @CollectionTable(name = "query_arguments", joinColumns = @JoinColumn(name = "dynamic_rule_query_id"))
-    @Schema(description = "Список аргументов для запроса", example = "[\"1000\"]")
+    @Schema(description = "Список аргументов для запроса", example = "DEBIT")
     private List<String> arguments;
 
     @Column(name = "negate", nullable = false)

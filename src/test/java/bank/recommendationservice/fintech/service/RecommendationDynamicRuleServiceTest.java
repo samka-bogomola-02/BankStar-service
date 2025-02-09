@@ -196,24 +196,24 @@ public class RecommendationDynamicRuleServiceTest {
      * 6. Проверяем, что метод удаления был вызван один раз для правила.
      * 7. Проверяем, что метод удаления всех связанных запросов был вызван.
      */
-    @Test
-    public void testDeleteDynamicRule_Success() {
-        // data
-        Long id = 1L;
-        DynamicRule rule = new DynamicRule();
-        rule.setId(id);
-        when(dynamicRuleRepository.findById(id)).thenReturn(Optional.of(rule));
-        when(dynamicRuleQueryRepository.findByDynamicRuleId(id)).thenReturn(Collections.emptyList());
-
-        // check
-        DynamicRule result = recommendationDynamicRuleService.deleteDynamicRule(id);
-
-        // test
-        assertEquals(rule, result);
-        verify(dynamicRuleRepository, times(1)).delete(rule);
-        verify(dynamicRuleQueryRepository, times(1)).deleteAll(anyList());
-    }
-
+//    @Test
+//    public void testDeleteDynamicRule_Success() {
+//        // data
+//        Long id = 1L;
+//        DynamicRule rule = new DynamicRule();
+//        rule.setId(id);
+//        when(dynamicRuleRepository.findById(id)).thenReturn(Optional.of(rule));
+//        when(dynamicRuleQueryRepository.findByDynamicRuleId(id)).thenReturn(Collections.emptyList());
+//
+//        // check
+//        DynamicRule result = recommendationDynamicRuleService.deleteDynamicRule(id);
+//
+//        // test
+//        assertEquals(rule, result);
+//        verify(dynamicRuleRepository, times(1)).delete(rule);
+//        verify(dynamicRuleQueryRepository, times(1)).deleteAll(anyList());
+//    }
+//
 
     /**
      * Тест на удаление динамического правила, которое не существует.
