@@ -115,14 +115,16 @@ Content-Type: application/json
 
 {
 "productName": "Кредитная карта",
-"productId": "550e8400-e29b-41d4-a716-446655440000",
-"productText": "Предлагаем вам кредитную карту с выгодными условиями",
-"queries": [
-{
-"query": "transactions.amount > ?",
-"arguments": ["1000"],
-"negate": false
-}
+  "productId": "550e8400-e29b-41d4-a716-446655440000",
+  "productText": "Предлагаем вам кредитную карту с выгодными условиями",
+  "rule": [
+    {
+        "query": "USER_OF",
+        "arguments": [
+            "CREDIT"
+        ],
+        "negate": true
+    }
 ]
 }
 ```
