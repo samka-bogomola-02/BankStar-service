@@ -11,7 +11,7 @@ import java.util.Objects;
 @Setter
 @Schema(description = "DTO для представления счетчика срабатываний динамических правил")
 public class RuleStatsDTO {
-    @Getter
+
     @JsonProperty("rule_id")
     private Long ruleId;
 
