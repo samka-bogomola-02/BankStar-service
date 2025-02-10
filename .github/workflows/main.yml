@@ -1,4 +1,4 @@
-name: Build and Test
+name: Build and Test with Coverage
 
 on:
   push:
@@ -25,5 +25,8 @@ jobs:
       - name: Build with Maven
         run: mvn clean install
 
-      - name: Run tests
+      - name: Run tests and generate coverage report
         run: mvn test
+
+      - name: Send coverage report to Coveralls
+        run: mvn coveralls:report
