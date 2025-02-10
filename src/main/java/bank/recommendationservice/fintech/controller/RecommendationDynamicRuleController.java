@@ -99,6 +99,7 @@ public class RecommendationDynamicRuleController {
     }
 
     @GetMapping("/stats")
+    @Operation(summary = "Получение статистики срабатывания динамических правил", description = "Возвращает счетчик срабатывания динамических правил")
     public ResponseEntity<RuleStatsResponse> getRuleStats() {
         RuleStatsResponse response = ruleStatsService.getAllRuleStats();
         return ResponseEntity.ok(response);
