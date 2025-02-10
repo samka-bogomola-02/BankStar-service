@@ -3,20 +3,10 @@
 Сервис рекомендаций предоставляет персонализированные предложения для клиентов SkyPro School на основе их транзакций и
 динамических правил.
 
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
-[![Coverage Status](https://coveralls.io/repos/github/joemccann/dillinger/badge.svg?branch=master)](https://coveralls.io/github/joemccann/dillinger?branch=master)
-(здесь нужно добавить значки сборки и покрытия, а выше две строчки удалить
+[![Build and Test](https://github.com/ibogomolova/BankStar-service/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/ibogomolova/BankStar-service/actions/workflows/main.yml)
 
 1. Build Status (Статус сборки)
 
-• Сервисы CI/CD:
-• GitHub Actions: Если вы используете GitHub Actions, URL-адрес статуса сборки можно получить из настроек вашего
-репозитория:
-
-1. Перейдите в ваш репозиторий на GitHub.
-2. Нажмите на вкладку "Actions".
-3. Выберите ваш workflow.
-4. В разделе "Badge" скопируйте markdown-код)
 
 ## Содержание
 
@@ -191,7 +181,6 @@ IllegalArgumentException.
 - [ИМЯ И ФАМИЛИЯ](tg://ссыльгитхаб) — Developer
 - [ИМЯ И ФАМИЛИЯ](tg://ссыльгитхаб) — QA
 
-место для счастливой фотки команды
 
 ## Источники
 

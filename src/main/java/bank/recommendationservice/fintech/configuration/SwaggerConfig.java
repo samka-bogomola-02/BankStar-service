@@ -13,8 +13,8 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Fintech API")
-                        .version("1.0")
+                        .title("${spring.application.name}")
+                        .version("${build.version}")
                         .description("API для управления новым сервисом Fintech - Recommended Program for SkyPro School"))
                 .addTagsItem(new Tag().name("Health Check").description("Эндпоинты для проверки работоспособности приложения"))
                 .addTagsItem(new Tag().name("Recommendation").description("Эндпоинты для управления рекомендациями"))
