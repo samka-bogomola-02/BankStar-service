@@ -13,11 +13,10 @@ public class RuleStatsDTO {
     @JsonProperty("rule_id")
     private Long ruleId;
 
-    @NotNull
     @JsonProperty("count")
-    private Integer count;
+    private int count;
 
-    public RuleStatsDTO(Long ruleId, Integer count) {
+    public RuleStatsDTO(Long ruleId, int count) {
         this.ruleId = ruleId;
         this.count = count;
     }
