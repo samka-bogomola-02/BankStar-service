@@ -22,6 +22,7 @@ public class RuleStatsDTO {
         this.ruleId = ruleId;
         this.count = count;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
