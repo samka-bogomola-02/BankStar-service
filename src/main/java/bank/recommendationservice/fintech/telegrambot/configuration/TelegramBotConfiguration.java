@@ -6,9 +6,13 @@
  */
 package bank.recommendationservice.fintech.telegrambot.configuration;
 
+import com.pengrad.telegrambot.TelegramBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,47 +26,31 @@ import java.util.Properties;
  * Если файл конфигурации не найден или произошла ошибка чтения, логируется соответствующее сообщение.
  */
 @Configuration
+@PropertySource("classpath:tg_token.properties")
 public class TelegramBotConfiguration {
 
-    /**
+  /**
      * Токен Telegram-бота.
      */
+    @Value("${bot.token}")
     private String botToken;
 
-    /**
+    private static final Logger logger = LoggerFactory.getLogger(TelegramBotConfiguration.class);
+
+      /**
      * Конструктор для инициализации конфигурации Telegram-бота.
      * <p>
-     * Метод загружает токен бота из файла конфигурации {@code tg_token.properties}.
+     * Загрузка токена бота из файла конфигурации {@code tg_token.properties}.
      * В случае ошибки чтения файла или его отсутствия, логируется ошибка.
-     */
-    public TelegramBotConfiguration() {
-        Properties properties = new Properties();
-        final Logger logger = LoggerFactory.getLogger(TelegramBotConfiguration.class);
-
-        try (InputStream input = getClass().getClassLoader().getResourceAsStream("tg_token.properties")) {
-            if (input == null) {
-                // Логирование ошибки, если файл не найден
-                logger.error("Не удалось найти файл конфигурации tg_token.properties");
-                return;
-            }
-
-            // Загрузка свойств из файла
-            properties.load(input);
-            this.botToken = properties.getProperty("bot.token");
-
-        } catch (IOException e) {
-            // Логирование ошибки, если произошла проблема с чтением файла
-            logger.error("Не удалось прочитать файл tg_token.properties");
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Возвращает токен Telegram-бота.
-     *
      * @return Строка, содержащая токен бота.
      */
-    public String getBotToken() {
-        return botToken;
+    @Bean
+    public TelegramBot telegramBot() {
+        if (botToken == null || botToken.isEmpty()) {
+            logger.error("Токен бота не установлен. Проверьте файл конфигурации tg_token.properties");
+            throw new IllegalArgumentException("Токен бота не установлен.");
+        }
+        return new TelegramBot(botToken);
     }
 }

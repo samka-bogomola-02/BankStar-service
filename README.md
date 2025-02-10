@@ -105,14 +105,16 @@ Content-Type: application/json
 
 {
 "productName": "Кредитная карта",
-"productId": "550e8400-e29b-41d4-a716-446655440000",
-"productText": "Предлагаем вам кредитную карту с выгодными условиями",
-"queries": [
-{
-"query": "transactions.amount > ?",
-"arguments": ["1000"],
-"negate": false
-}
+  "productId": "550e8400-e29b-41d4-a716-446655440000",
+  "productText": "Предлагаем вам кредитную карту с выгодными условиями",
+  "rule": [
+    {
+        "query": "USER_OF",
+        "arguments": [
+            "CREDIT"
+        ],
+        "negate": true
+    }
 ]
 }
 ```
@@ -176,10 +178,10 @@ IllegalArgumentException.
 
 ## Команда проекта
 
-- [ИМЯ И ФАМИЛИЯ](tg://ссыльгитхаб) — TeamLead
-- [ИМЯ И ФАМИЛИЯ](tg://ссыльгитхаб) — PM
-- [ИМЯ И ФАМИЛИЯ](tg://ссыльгитхаб) — Developer
-- [ИМЯ И ФАМИЛИЯ](tg://ссыльгитхаб) — QA
+- [Irina bogomolova](https://github.com/samka-bogomola-02) — TeamLead
+- [Alina Cheremiskina](https://github.com/linskay) — PM
+- [Vitaly Dineka](https://github.com/Rafnes) — Developer
+- [Ivan Pesterev](https://github.com/gface34rus) — QA
 
 
 ## Источники

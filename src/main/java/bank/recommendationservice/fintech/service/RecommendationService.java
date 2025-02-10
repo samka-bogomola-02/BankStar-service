@@ -29,14 +29,19 @@ public class RecommendationService {
     private final DynamicRuleRepository dynamicRuleRepository;
 
     private final RecommendationsRepository recommendationsRepository;
+
+    private final RuleStatsService ruleStatsService;
+
     private static final Logger logger = LoggerFactory.getLogger(RecommendationService.class);
 
     public RecommendationService(List<RecommendationRuleSet> ruleSets,
                                  DynamicRuleRepository dynamicRuleRepository,
-                                 RecommendationsRepository recommendationsRepository) {
+                                 RecommendationsRepository recommendationsRepository,
+                                 RuleStatsService ruleStatsService) {
         this.ruleSets = ruleSets;
         this.dynamicRuleRepository = dynamicRuleRepository;
         this.recommendationsRepository = recommendationsRepository;
+        this.ruleStatsService = ruleStatsService;
     }
 
 
@@ -54,6 +59,30 @@ public class RecommendationService {
      * @throws NullArgumentException если динамическое правило или userId равно null
      */
     public List<RecommendationDTO> getRecommendations(UUID userId) {
+        List<DynamicRule> dynamicRules = dynamicRuleRepository.findAll();
+        List<RecommendationDTO> dynamicRecommendations = new ArrayList<>();
+
+        for (DynamicRule rule : dynamicRules) {
+            if (evaluateDynamicRules(rule, userId)) {
+                dynamicRecommendations.add(new RecommendationDTO(rule.getProductId(), rule.getProductName(), rule.getProductText()));
+                ruleStatsService.increaseCounter(rule.getId());
+            }
+        }
+
+        List<RecommendationDTO> standardRecommendations = ruleSets.stream()
+                .map(p -> p.recommend(userId))
+                .filter(Objects::nonNull)
+                .toList();
+
+        List<RecommendationDTO> allRecommendations = new ArrayList<>();
+        allRecommendations.addAll(dynamicRecommendations);
+        allRecommendations.addAll(standardRecommendations);
+
+        return allRecommendations;
+    }
+
+    public List<RecommendationDTO> getRecommendations(String userName) {
+        UUID userId = recommendationsRepository.getUserIdByUserName(userName);
         List<DynamicRule> dynamicRules = dynamicRuleRepository.findAll();
         List<RecommendationDTO> dynamicRecommendations = new ArrayList<>();
 
@@ -76,6 +105,8 @@ public class RecommendationService {
 
         return allRecommendations;
     }
+
+
 
 
     /**

@@ -131,7 +131,7 @@ public class RecommendationsRepository {
             throw new NullArgumentException("userId не должен быть пустым");
         }
 
-        String query = "SELECT COUNT(*) FROM transactions WHERE product_type = ? AND user_id = ?";
+        String query = "SELECT COUNT(t.amount) FROM transactions t JOIN products p ON t.PRODUCT_ID = p.ID WHERE p.TYPE = ? AND t.USER_ID = ?";
 
         Object[] params = new Object[]{productType.name(), userId};
 
@@ -197,5 +197,19 @@ public class RecommendationsRepository {
             case LESS_THAN_OR_EQUALS -> depositSum <= withdrawSum;
             default -> throw new IllegalArgumentException("Unknown comparison type: " + comparisonType);
         };
+    }
+
+    public UUID getUserIdByUserName(String userName) {
+        String sql = "SELECT id FROM users WHERE username = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{userName}, UUID.class);
+    }
+
+    public String getFullNameByUsername(String username) {
+        String sql = "SELECT first_name, last_name FROM users WHERE username = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{username}, (rs, rowNum) -> {
+            String firstName = rs.getString("first_name");
+            String lastName = rs.getString("last_name");
+            return firstName + " " + lastName;
+        });
     }
 }

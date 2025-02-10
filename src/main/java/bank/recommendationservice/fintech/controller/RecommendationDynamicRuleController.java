@@ -1,7 +1,9 @@
 package bank.recommendationservice.fintech.controller;
 
 import bank.recommendationservice.fintech.model.DynamicRule;
+import bank.recommendationservice.fintech.model.RuleStatsResponse;
 import bank.recommendationservice.fintech.service.RecommendationDynamicRuleService;
+import bank.recommendationservice.fintech.service.RuleStatsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,9 +25,12 @@ import java.util.List;
 public class RecommendationDynamicRuleController {
 
     private final RecommendationDynamicRuleService recommendationDynamicRuleService;
+    private final RuleStatsService ruleStatsService;
 
-    public RecommendationDynamicRuleController(RecommendationDynamicRuleService recommendationDynamicRuleService) {
+    public RecommendationDynamicRuleController(RecommendationDynamicRuleService recommendationDynamicRuleService,
+                                               RuleStatsService ruleStatsService) {
         this.recommendationDynamicRuleService = recommendationDynamicRuleService;
+        this.ruleStatsService = ruleStatsService;
     }
 
     /**
@@ -92,4 +97,11 @@ public class RecommendationDynamicRuleController {
         List<DynamicRule> rules = recommendationDynamicRuleService.getAllDynamicRules();
         return ResponseEntity.ok(rules);
     }
+
+    @GetMapping("/stats")
+    public ResponseEntity<RuleStatsResponse> getRuleStats() {
+        RuleStatsResponse response = ruleStatsService.getAllRuleStats();
+        return ResponseEntity.ok(response);
+    }
+
 }
