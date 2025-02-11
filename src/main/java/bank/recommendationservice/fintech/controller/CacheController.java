@@ -1,6 +1,7 @@
 package bank.recommendationservice.fintech.controller;
 
 import bank.recommendationservice.fintech.service.CacheService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/management")
-@Tag(name = "Сброс кеша", description = "Эндпоинты для сброса кеша")
+@Tag(name = "Clear cache", description = "Эндпоинты для сброса кеша")
 public class CacheController {
     private final CacheService cacheService;
 
@@ -19,6 +20,7 @@ public class CacheController {
     }
 
     @PostMapping("/clear-caches")
+    @Operation(summary = "Сброс кеша всех запросов", description = "Сбрасывается кеш всех запросов в системе ")
     public ResponseEntity<String> clearCaches() {
         cacheService.clearCaches();
         return new ResponseEntity<>("Кеш успешно очищен.", HttpStatus.OK);
