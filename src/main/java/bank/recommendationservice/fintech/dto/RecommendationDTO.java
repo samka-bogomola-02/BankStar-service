@@ -52,10 +52,6 @@ public class RecommendationDTO {
 
     @Override
     public String toString() {
-        return "RecommendationDTO{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", text='" + text + '\'' +
-                '}';
+        return name + " - " + text;
     }
 }

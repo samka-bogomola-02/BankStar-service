@@ -2,7 +2,6 @@ package bank.recommendationservice.fintech.service;
 
 import bank.recommendationservice.fintech.exception.RulesNotFoundException;
 import bank.recommendationservice.fintech.model.DynamicRule;
-import bank.recommendationservice.fintech.model.DynamicRuleQuery;
 import bank.recommendationservice.fintech.repository.DynamicRuleQueryRepository;
 import bank.recommendationservice.fintech.repository.DynamicRuleRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -71,8 +70,8 @@ public class RecommendationDynamicRuleService {
      * @return удаленное правило
      * @throws RulesNotFoundException если правило с указанным идентификатором не найдено
      */
+    @Transactional
     public DynamicRule deleteDynamicRule(Long id) {
-        logger.info("Удаление правила по id: {}", id);
         ruleStatsService.deleteRuleStats(id);
         DynamicRule ruleToRemove = dynamicRuleRepository.findById(id)
                 .orElseThrow(() -> new RulesNotFoundException("Правило не найдено!"));
