@@ -42,7 +42,7 @@ public class DynamicRule {
     @Schema(description = "Текст продукта", example = "Предлагаем вам кредитную карту с выгодными условиями")
     private String productText;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "dynamicRule", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "dynamicRule")
     @JsonProperty("rule")
     @Schema(description = "Список запросов для динамического правила")
     private List<DynamicRuleQuery> queries;
