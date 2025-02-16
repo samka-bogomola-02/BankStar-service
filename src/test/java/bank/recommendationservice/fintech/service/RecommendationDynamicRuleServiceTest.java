@@ -1,10 +1,10 @@
 package bank.recommendationservice.fintech.service;
 
 import bank.recommendationservice.fintech.exception.RulesNotFoundException;
-import bank.recommendationservice.fintech.model.DynamicRule;
-import bank.recommendationservice.fintech.model.DynamicRuleQuery;
 import bank.recommendationservice.fintech.repository.DynamicRuleQueryRepository;
 import bank.recommendationservice.fintech.repository.DynamicRuleRepository;
+import bank.recommendationservice.fintech.model.DynamicRule;
+import bank.recommendationservice.fintech.model.DynamicRuleQuery;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,10 +15,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -29,8 +28,6 @@ public class RecommendationDynamicRuleServiceTest {
     private DynamicRuleQueryRepository dynamicRuleQueryRepository;
     @Mock
     private DynamicRuleRepository dynamicRuleRepository;
-    @Mock
-    private RuleStatsService ruleStatsService;
     @InjectMocks
     private RecommendationDynamicRuleService recommendationDynamicRuleService;
     private DynamicRule dynamicRule;
@@ -45,7 +42,6 @@ public class RecommendationDynamicRuleServiceTest {
     @Test
     public void setup() {
         dynamicRule = new DynamicRule();
-
     }
 
     /**
@@ -64,7 +60,6 @@ public class RecommendationDynamicRuleServiceTest {
         // test
         assertEquals(dynamicRule, result);
         verify(dynamicRuleRepository, times(1)).save(dynamicRule);
-        verify(ruleStatsService, times(1)).addRuleStats(dynamicRule.getId());
     }
 
 
@@ -187,6 +182,7 @@ public class RecommendationDynamicRuleServiceTest {
     }
 
 
+
     /**
      * Тест на успешное удаление динамического правила.
      *
@@ -205,16 +201,18 @@ public class RecommendationDynamicRuleServiceTest {
         Long id = 1L;
         DynamicRule rule = new DynamicRule();
         rule.setId(id);
-        when(dynamicRuleRepository.existsById(id)).thenReturn(true);
+        when(dynamicRuleRepository.findById(id)).thenReturn(Optional.of(rule));
         when(dynamicRuleQueryRepository.findByDynamicRuleId(id)).thenReturn(Collections.emptyList());
 
         // check
-        recommendationDynamicRuleService.deleteDynamicRule(id);
+        DynamicRule result = recommendationDynamicRuleService.deleteDynamicRule(id);
 
         // test
-        verify(dynamicRuleRepository, times(1)).deleteById(id);
+        assertEquals(rule, result);
+        verify(dynamicRuleRepository, times(1)).delete(rule);
         verify(dynamicRuleQueryRepository, times(1)).deleteAll(anyList());
     }
+
 
     /**
      * Тест на удаление динамического правила, которое не существует.
@@ -228,6 +226,7 @@ public class RecommendationDynamicRuleServiceTest {
     public void testDeleteDynamicRule_NotFound() {
         // data
         Long id = 1L;
+        when(dynamicRuleRepository.findById(id)).thenReturn(Optional.empty());
 
         // check & test
         recommendationDynamicRuleService.deleteDynamicRule(id);
@@ -319,13 +318,13 @@ public class RecommendationDynamicRuleServiceTest {
     @Test
     public void testGetAllDynamicRules_NullList() {
         // data
-        when(dynamicRuleRepository.findAll()).thenReturn(Collections.emptyList());
+        when(dynamicRuleRepository.findAll()).thenReturn(null);
 
         // check
         List<DynamicRule> result = recommendationDynamicRuleService.getAllDynamicRules();
 
         // test
-        assertTrue(result.isEmpty());
+        assertNull(result);
     }
 }
 

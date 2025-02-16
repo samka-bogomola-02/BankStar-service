@@ -3,8 +3,6 @@ package bank.recommendationservice.fintech.service;
 
 import bank.recommendationservice.fintech.dto.RecommendationDTO;
 import bank.recommendationservice.fintech.exception.NullArgumentException;
-import bank.recommendationservice.fintech.exception.UnknownComparisonTypeException;
-import bank.recommendationservice.fintech.exception.UnknownProductTypeException;
 import bank.recommendationservice.fintech.exception.UnknownQueryTypeException;
 import bank.recommendationservice.fintech.interfaces.RecommendationRuleSet;
 import bank.recommendationservice.fintech.model.DynamicRule;
@@ -83,31 +81,6 @@ public class RecommendationService {
         return allRecommendations;
     }
 
-    public List<RecommendationDTO> getRecommendations(String userName) {
-        UUID userId = recommendationsRepository.getUserIdByUserName(userName);
-        List<DynamicRule> dynamicRules = dynamicRuleRepository.findAll();
-        List<RecommendationDTO> dynamicRecommendations = new ArrayList<>();
-
-        for (DynamicRule rule : dynamicRules) {
-
-            if (evaluateDynamicRules(rule, userId)) {
-
-                dynamicRecommendations.add(new RecommendationDTO(rule.getProductId(), rule.getProductName(), rule.getProductText()));
-            }
-        }
-
-        List<RecommendationDTO> standardRecommendations = ruleSets.stream()
-                .map(p -> p.recommend(userId))
-                .filter(Objects::nonNull)
-                .toList();
-
-        List<RecommendationDTO> allRecommendations = new ArrayList<>();
-        allRecommendations.addAll(dynamicRecommendations);
-        allRecommendations.addAll(standardRecommendations);
-
-        return allRecommendations;
-    }
-
 
     /**
      * Оценивает динамические правила для заданного пользователя.
@@ -130,26 +103,22 @@ public class RecommendationService {
         for (DynamicRuleQuery query : queries) {
             try {
                 QueryType queryType = QueryType.fromString(query.getQuery());
-                if (!QueryType.isValidQuery(queryType.getQueryType())) {
-                    logger.warn("Неизвестный тип запроса query: {}", query.getQuery());
-                    throw new UnknownQueryTypeException("Неизвестный тип запроса query: " + queryType);
-                }
                 List<String> queryArguments = query.getArguments();
                 return switch (queryType) {
                     case USER_OF -> processUserOfQuery(userId, queryArguments.get(0));
-                    case ACTIVE_USER_OF ->
-                            processActiveUserOfQuery(ProductType.fromString(queryArguments.get(0)), userId);
+                    case ACTIVE_USER_OF -> processActiveUserOfQuery(ProductType.valueOf(queryArguments.get(0)), userId);
                     case TRANSACTION_SUM_COMPARE ->
-                            processTransactionSumCompare(ProductType.fromString(queryArguments.get(0)),
-                                    TransactionType.fromString(queryArguments.get(1)), userId, ComparisonType.fromString(queryArguments.get(2)), Integer.parseInt(queryArguments.get(3)));
+                            processTransactionSumCompare(ProductType.valueOf(queryArguments.get(0)),
+                                    TransactionType.valueOf(queryArguments.get(1)), userId, ComparisonType.valueOf(queryArguments.get(2)), Integer.parseInt(queryArguments.get(3)));
 
                     case TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW ->
-                            processTransactionSumCompareDepositWithdraw(ProductType.fromString(queryArguments.get(0)),
-                                    userId, ComparisonType.fromString(queryArguments.get(1)));
+                            processTransactionSumCompareDepositWithdraw(ProductType.valueOf(queryArguments.get(0)),
+                                    userId, ComparisonType.valueOf(queryArguments.get(1)));
+
                 };
 
-            } catch (UnknownQueryTypeException | UnknownComparisonTypeException | UnknownProductTypeException e) {
-                logger.error("Не удалось обработать что-то: {}", e.getMessage(), e);
+            } catch (UnknownQueryTypeException e) {
+                logger.warn("Неизвестный тип запроса query: {}", query.getQuery());
                 return false;
             }
         }

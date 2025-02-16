@@ -27,7 +27,6 @@
         <url/>
     </scm>
     <properties>
-        <spring-boot.build-info.enabled>true</spring-boot.build-info.enabled>
         <java.version>17</java.version>
     </properties>
     <dependencies>
@@ -71,7 +70,7 @@
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
-            <version>2.0.1.Final</version>
+            <version>2.0.1.Final</version> <!-- Убедитесь, что используете последнюю версию -->
         </dependency>
 
         <dependency>
@@ -90,6 +89,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+
 
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -110,6 +110,7 @@
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
+            <version>3.1.8</version>
         </dependency>
 
         <dependency>
@@ -118,31 +119,15 @@
             <version>7.11.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
 
     </dependencies>
+
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>build-info</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
