@@ -816,3 +816,6 @@ Caused by: org.h2.mvstore.MVStoreException: The file is locked: C:/UsersIDE/Idea
 	at org.h2.mvstore.SingleFileStore.open(SingleFileStore.java:81)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:286)
 	... 98 more
+2025-02-16 16:16:51.448522+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found (this database is empty); SQL statement:
+SELECT id FROM users WHERE username = ? [42104-232]
